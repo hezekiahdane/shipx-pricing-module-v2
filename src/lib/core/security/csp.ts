@@ -1,7 +1,20 @@
-import { randomBytes } from 'crypto';
+/**
+ * CSP nonce generation and header builder.
+ * Uses Web Crypto API for Edge Runtime compatibility (middleware).
+ */
+
+function bytesToBase64(bytes: Uint8Array): string {
+  let binary = '';
+  for (const byte of bytes) {
+    binary += String.fromCharCode(byte);
+  }
+  return btoa(binary);
+}
 
 export function generateCspNonce(): string {
-  return randomBytes(16).toString('base64');
+  const bytes = new Uint8Array(16);
+  crypto.getRandomValues(bytes);
+  return bytesToBase64(bytes);
 }
 
 export function buildCspHeader(nonce: string): string {

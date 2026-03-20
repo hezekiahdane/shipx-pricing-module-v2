@@ -27,24 +27,7 @@ const securityHeaders = [
     key: 'Strict-Transport-Security',
     value: 'max-age=63072000; includeSubDomains; preload',
   },
-  // Content Security Policy
-  // Adjust script-src / connect-src as you add third-party services
-  {
-    key: 'Content-Security-Policy',
-    value: [
-      "default-src 'self'",
-      // Next.js requires 'unsafe-inline' for styles; Vercel Analytics needs the CDN
-      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://va.vercel-scripts.com",
-      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-      "img-src 'self' data: https:",
-      "font-src 'self' https://fonts.gstatic.com",
-      // Add your Supabase project URL to connect-src when you set it up
-      "connect-src 'self'",
-      "frame-ancestors 'none'",
-      "base-uri 'self'",
-      "form-action 'self'",
-    ].join('; '),
-  },
+  // Content-Security-Policy is now set dynamically via middleware (nonce-based)
 ];
 
 const nextConfig: NextConfig = {
