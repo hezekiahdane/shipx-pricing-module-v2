@@ -135,6 +135,26 @@ src/
 3. Internal `@/` imports (types, libs, components)
 4. Relative imports
 
+## Caching & Deployment
+
+- HTML pages and API routes must always serve fresh content after a deploy — set `Cache-Control: no-cache, no-store, must-revalidate` on all routes except static assets
+- Static assets (`_next/static/`, `_next/image/`) are content-hashed by Next.js and safe to cache indefinitely — exclude them from the no-cache rule
+- If a project serves custom static files (e.g. `/audio/`, `/og/`), exclude those paths too
+- This is configured in `next.config.ts` via the `headers()` function alongside security headers
+- **Never initialize SDK clients (Stripe, Resend, etc.) at module scope** in API routes — use lazy factory functions so builds succeed without env vars:
+
+```ts
+// WRONG — crashes at build time if env var is missing
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+
+// CORRECT — only runs at request time
+function getStripe() {
+  const key = process.env.STRIPE_SECRET_KEY;
+  if (!key) throw new Error('STRIPE_SECRET_KEY is not configured');
+  return new Stripe(key);
+}
+```
+
 ## CSS / Tailwind
 
 - Use design tokens (CSS custom properties) for all brand values
