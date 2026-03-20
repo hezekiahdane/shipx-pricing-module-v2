@@ -31,6 +31,10 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+  // PPR (cacheComponents: true) is available but requires <Suspense> boundaries
+  // around all dynamic data access. Enable once Suspense boundaries are in place.
+  // cacheComponents: true,
+
   // Disable the "Powered by Next.js" header
   poweredByHeader: false,
 
