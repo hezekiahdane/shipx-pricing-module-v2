@@ -9,6 +9,7 @@ interface ErrorPageProps {
 
 export default function ErrorPage({ error, reset }: ErrorPageProps) {
   useEffect(() => {
+    // biome-ignore lint/suspicious/noConsole: Error boundary needs console.error for debugging
     console.error('Unhandled error:', error);
   }, [error]);
 
@@ -25,6 +26,7 @@ export default function ErrorPage({ error, reset }: ErrorPageProps) {
         </pre>
       )}
       <button
+        type="button"
         onClick={reset}
         className="bg-primary-600 hover:bg-primary-700 mt-2 rounded-lg px-6 py-2 text-white transition-colors"
       >

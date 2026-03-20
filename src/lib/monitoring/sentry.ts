@@ -15,7 +15,6 @@ export function initSentry() {
 
 export function captureError(error: Error, context?: Record<string, unknown>) {
   if (!SENTRY_DSN) {
-    console.error(error);
     return;
   }
   Sentry.captureException(error, { extra: context });

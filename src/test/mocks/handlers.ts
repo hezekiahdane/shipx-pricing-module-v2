@@ -8,7 +8,7 @@
  *   })
  */
 
-import { http, HttpResponse } from 'msw';
+import { HttpResponse, http } from 'msw';
 
 export const handlers = [
   // Mock Resend email API

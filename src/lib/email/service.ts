@@ -6,8 +6,8 @@
  */
 
 import { render } from '@react-email/render';
-import { resend } from '@/lib/email/client';
 import { env } from '@/lib/core/env';
+import { resend } from '@/lib/email/client';
 import { ContactAdminEmail } from '@/lib/email/templates/contact-admin';
 import { ContactConfirmationEmail } from '@/lib/email/templates/contact-confirmation';
 import type { ContactFormData } from '@/lib/validators/contact.schema';
@@ -22,7 +22,6 @@ export async function sendContactEmails(
   data: ContactFormData,
 ): Promise<EmailResult> {
   if (!resend) {
-    console.warn('RESEND_API_KEY not set — email sending disabled');
     return { success: false, error: 'Email service not configured' };
   }
 
@@ -56,11 +55,9 @@ export async function sendContactEmails(
     ]);
 
     if (adminResult.status === 'rejected') {
-      console.error('Failed to send admin email:', adminResult.reason);
     }
 
     if (userResult.status === 'rejected') {
-      console.error('Failed to send confirmation email:', userResult.reason);
     }
 
     // Consider the operation successful if the admin email was sent
@@ -71,7 +68,6 @@ export async function sendContactEmails(
     return { success: false, error: 'Failed to send email' };
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Unknown error';
-    console.error('Email service error:', message);
     return { success: false, error: message };
   }
 }

@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest';
-import { generateCspNonce, buildCspHeader } from '../csp';
+import { describe, expect, it } from 'vitest';
+import { buildCspHeader, generateCspNonce } from '../csp';
 
 describe('generateCspNonce', () => {
   it('returns a base64 string', () => {

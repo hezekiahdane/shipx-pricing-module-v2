@@ -80,10 +80,10 @@
     --tag-letter-spacing: 0px;
 
     /* Font Families (Match these in layout.tsx) */
-    --font-heading: 'Oswald', sans-serif;
-    --font-body: 'Poppins', sans-serif;
-    --font-caption: 'Poppins', sans-serif;
-    --font-gilroy: 'Gilroy', sans-serif;
+    --font-heading: "Oswald", sans-serif;
+    --font-body: "Poppins", sans-serif;
+    --font-caption: "Poppins", sans-serif;
+    --font-gilroy: "Gilroy", sans-serif;
     --card: 0 0% 100%;
     --card-foreground: 0 0% 3.9%;
     --popover: 0 0% 100%;

@@ -2,7 +2,7 @@ import { eq } from 'drizzle-orm';
 import type { PgTable } from 'drizzle-orm/pg-core';
 import { getDb } from './client';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// biome-ignore lint/suspicious/noExplicitAny: Drizzle generic table type requires any
 type AnyPgTable = PgTable<any>;
 
 export class BaseRepository<
@@ -14,7 +14,7 @@ export class BaseRepository<
 
   async findAll(): Promise<TRow[]> {
     const db = getDb();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore lint/suspicious/noExplicitAny: Drizzle type coercion
     const rows = await db.select().from(this.table as any);
     return rows as TRow[];
   }
@@ -22,7 +22,7 @@ export class BaseRepository<
   async create(data: TInsert): Promise<TRow> {
     const db = getDb();
     const rows = await db
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // biome-ignore lint/suspicious/noExplicitAny: Drizzle type coercion
       .insert(this.table as any)
       .values(data as Record<string, unknown>)
       .returning();
@@ -31,10 +31,10 @@ export class BaseRepository<
 
   async delete(id: string): Promise<void> {
     const db = getDb();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const idColumn = (this.table as any)['id'];
+    // biome-ignore lint/suspicious/noExplicitAny: Drizzle type coercion
+    const idColumn = (this.table as any).id;
     if (!idColumn) throw new Error('Table must have an "id" column');
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore lint/suspicious/noExplicitAny: Drizzle type coercion
     await (db.delete(this.table as any) as any).where(eq(idColumn, id));
   }
 }

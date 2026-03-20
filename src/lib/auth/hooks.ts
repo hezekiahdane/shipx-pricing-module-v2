@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { createClient } from '@/lib/auth/clients/browser';
-import type { User, Session } from '@/lib/auth/types';
+import type { Session, User } from '@/lib/auth/types';
 
 export function useUser() {
   const [user, setUser] = useState<User | null>(null);

@@ -3,7 +3,7 @@
  * Use this instead of @testing-library/react's `render` directly.
  */
 
-import { render, type RenderOptions } from '@testing-library/react';
+import { type RenderOptions, render } from '@testing-library/react';
 import type { ReactElement } from 'react';
 
 // Extend with additional providers as needed (e.g. NextIntlClientProvider, QueryClientProvider)

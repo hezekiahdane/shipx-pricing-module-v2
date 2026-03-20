@@ -1,6 +1,6 @@
 export { createClient as createBrowserClient } from './clients/browser';
-export { createClient as createServerClient } from './clients/server';
 export { createMiddlewareClient } from './clients/middleware';
+export { createClient as createServerClient } from './clients/server';
 export { authGuard } from './guard';
-export { useUser, useSession } from './hooks';
-export type { User, Session } from './types';
+export { useSession, useUser } from './hooks';
+export type { Session, User } from './types';

@@ -1,13 +1,13 @@
 import { NextResponse } from 'next/server';
 import type { z } from 'zod';
-import type { ApiResponse } from './response';
-import { errorResponse } from './response';
-import { AppError } from './errors';
-import { validateCsrfOrigin } from '@/lib/core/security/csrf';
 import {
   checkRateLimit,
   type RateLimitPreset,
 } from '@/lib/core/security/arcjet';
+import { validateCsrfOrigin } from '@/lib/core/security/csrf';
+import { AppError } from './errors';
+import type { ApiResponse } from './response';
+import { errorResponse } from './response';
 
 interface WithApiOptions<TSchema extends z.ZodType = z.ZodType> {
   schema?: TSchema;
@@ -54,14 +54,14 @@ export function withApi<TSchema extends z.ZodType>(
       }
 
       // 3. Auth check (requires auth module)
-      let user: unknown = undefined;
+      let user: unknown;
       if (options.auth) {
         try {
           // Dynamic path prevents Vite from resolving at transform time
           const authPath = '@/lib/auth';
           const { createServerClient } = await (import(
             /* @vite-ignore */ authPath
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            // biome-ignore lint/suspicious/noExplicitAny: dynamic import requires any
           ) as Promise<any>);
           const supabase = await createServerClient();
           const {
@@ -107,8 +107,6 @@ export function withApi<TSchema extends z.ZodType>(
           status: error.statusCode,
         });
       }
-
-      console.error('API error:', error);
       return NextResponse.json(errorResponse('Internal server error'), {
         status: 500,
       });

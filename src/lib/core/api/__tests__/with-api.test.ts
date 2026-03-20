@@ -1,7 +1,7 @@
-import { describe, it, expect, vi } from 'vitest';
-import { withApi } from '../with-api';
-import { successResponse } from '../response';
+import { describe, expect, it, vi } from 'vitest';
 import { z } from 'zod';
+import { successResponse } from '../response';
+import { withApi } from '../with-api';
 
 // Mock Arcjet to always allow
 vi.mock('@/lib/core/security/arcjet', () => ({

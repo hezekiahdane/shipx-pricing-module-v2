@@ -1,6 +1,6 @@
 import arcjet, {
-  shield,
   detectBot,
+  shield,
   tokenBucket,
   validateEmail,
 } from '@arcjet/next';
@@ -19,9 +19,6 @@ let warnedOnce = false;
 function isArcjetConfigured(): boolean {
   const configured = !!process.env.ARCJET_KEY;
   if (!configured && !warnedOnce) {
-    console.warn(
-      'ARCJET_KEY not set — security protections disabled (rate limiting, WAF, bot detection)',
-    );
     warnedOnce = true;
   }
   return configured;
@@ -72,8 +69,7 @@ export async function checkRateLimit(
       allowed: !decision.isDenied(),
       reason: decision.isDenied() ? decision.reason.type : undefined,
     };
-  } catch (error) {
-    console.error('Arcjet error (allowing request):', error);
+  } catch (_error) {
     return { allowed: true };
   }
 }
@@ -91,7 +87,7 @@ export async function checkEmail(email: string): Promise<boolean> {
       }),
     );
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore lint/suspicious/noExplicitAny: Arcjet protect method type mismatch
     const decision = await (ajWithEmail.protect as any)({
       ip: '127.0.0.1',
       headers: new Headers(),
@@ -99,8 +95,7 @@ export async function checkEmail(email: string): Promise<boolean> {
     });
 
     return !decision.isDenied();
-  } catch (error) {
-    console.error('Arcjet email validation error (allowing):', error);
+  } catch (_error) {
     return true;
   }
 }

@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest';
 import { NextRequest, NextResponse } from 'next/server';
+import { describe, expect, it } from 'vitest';
 import { authGuard } from '../guard';
 
 function makeRequest(pathname: string): NextRequest {

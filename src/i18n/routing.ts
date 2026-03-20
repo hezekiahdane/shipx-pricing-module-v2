@@ -10,8 +10,8 @@
  *   3. That's it — routing, middleware, and metadata update automatically.
  */
 
-import { defineRouting } from 'next-intl/routing';
 import { createNavigation } from 'next-intl/navigation';
+import { defineRouting } from 'next-intl/routing';
 import { siteConfig } from '@/lib/core/config/site';
 
 export const routing = defineRouting({

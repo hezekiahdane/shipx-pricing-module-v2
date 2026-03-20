@@ -33,9 +33,9 @@ export async function createClient(options: CreateClientOptions = {}) {
         },
         setAll(cookiesToSet) {
           try {
-            cookiesToSet.forEach(({ name, value, options: cookieOptions }) =>
-              cookieStore.set(name, value, cookieOptions),
-            );
+            cookiesToSet.forEach(({ name, value, options: cookieOptions }) => {
+              cookieStore.set(name, value, cookieOptions);
+            });
           } catch {
             // setAll is called from Server Components where cookies cannot be mutated.
             // This is safe to ignore — the middleware handles session refresh.

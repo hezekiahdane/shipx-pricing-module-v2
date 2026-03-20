@@ -1,11 +1,11 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import {
   AppError,
-  ValidationError,
-  NotFoundError,
-  UnauthorizedError,
   ForbiddenError,
+  NotFoundError,
   RateLimitError,
+  UnauthorizedError,
+  ValidationError,
 } from '../errors';
 
 describe('AppError', () => {
