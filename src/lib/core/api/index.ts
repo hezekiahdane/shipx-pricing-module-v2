@@ -13,3 +13,5 @@ export {
   ForbiddenError,
   RateLimitError,
 } from './errors';
+
+export { withApi } from './with-api';
