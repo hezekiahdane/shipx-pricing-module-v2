@@ -1,11 +1,18 @@
 'use client';
 
+import { captureError } from '@/lib/monitoring/sentry';
+import { useEffect } from 'react';
+
 interface GlobalErrorProps {
   error: Error & { digest?: string };
   reset: () => void;
 }
 
 export default function GlobalError({ error, reset }: GlobalErrorProps) {
+  useEffect(() => {
+    captureError(error);
+  }, [error]);
+
   return (
     <html>
       <body className="flex min-h-screen flex-col items-center justify-center gap-4 px-4 text-center font-sans">

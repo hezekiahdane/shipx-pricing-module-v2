@@ -1,8 +1,7 @@
 import type { Metadata } from 'next';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
-import { Analytics } from '@vercel/analytics/react';
-import { SpeedInsights } from '@vercel/speed-insights/next';
+import { Analytics, SpeedInsights } from '@/lib/monitoring';
 import '@/app/globals.css';
 
 import Navbar from '@/components/layout/Navbar';
