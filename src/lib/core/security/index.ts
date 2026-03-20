@@ -5,3 +5,9 @@ export {
   normalizeWhitespace,
   sanitizeText,
 } from './sanitize';
+export {
+  checkRateLimit,
+  checkEmail,
+  rateLimitPresets,
+  type RateLimitPreset,
+} from './arcjet';
