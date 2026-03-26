@@ -18,20 +18,14 @@ export interface DevPanelStateSimulator {
   states: string[];
 }
 
-export interface DevPanelAsset {
-  label: string;
-  value: string;
-}
-
 export interface DevPanelConfig {
   projectName: string;
-  pages: DevPanelPage[];
+  pages?: DevPanelPage[]; // Optional — auto-scan fills in if omitted
   debugToggles?: DevPanelDebugToggle[];
-  stateSimulators?: DevPanelStateSimulator[];
-  assets?: DevPanelAsset[];
 }
 
 export { DevPanel } from './DevPanel';
 export type { DevPanelContextValue } from './DevPanelProvider';
 export { DevPanelProvider } from './DevPanelProvider';
 export { useDevPanel } from './useDevPanel';
+// NOTE: useSimulatedState export is added in Task 4 — the file doesn't exist yet
