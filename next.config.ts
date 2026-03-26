@@ -1,3 +1,4 @@
+import path from 'node:path';
 import withBundleAnalyzer from '@next/bundle-analyzer';
 import type { NextConfig } from 'next';
 import createNextIntlPlugin from 'next-intl/plugin';
@@ -49,6 +50,14 @@ const nextConfig: NextConfig = {
   // PPR (cacheComponents: true) is available but requires <Suspense> boundaries
   // around all dynamic data access. Enable once Suspense boundaries are in place.
   // cacheComponents: true,
+
+  // Fix Turbopack workspace root detection when running inside a git worktree.
+  // Without this, Turbopack detects the parent project's lockfile and treats it
+  // as the workspace root, causing it to compile sibling worktree files as
+  // additional app routes — which fails because those files may use Node.js APIs.
+  turbopack: {
+    root: path.resolve(__dirname),
+  },
 
   // Disable the "Powered by Next.js" header
   poweredByHeader: false,

@@ -1,6 +1,6 @@
 'use client';
 
-import { cn } from '@/lib/core';
+import { cn } from '@/lib/core/utils';
 import { useDevPanel } from '../useDevPanel';
 
 export function StateSimSection() {
