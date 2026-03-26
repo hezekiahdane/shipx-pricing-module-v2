@@ -50,6 +50,60 @@ describe('GET /api/dev/pages', () => {
     );
   });
 
+  it('omits route group segment from path when (group) directory is present', async () => {
+    process.env.NODE_ENV = 'development';
+    const { readdirSync } = await import('node:fs');
+    vi.mocked(readdirSync).mockImplementation((dir: unknown) => {
+      const path = dir as string;
+      if (path.endsWith('[locale]')) {
+        return [
+          { name: '(marketing)', isDirectory: () => true },
+          // biome-ignore lint/suspicious/noExplicitAny: test mock typecasting
+        ] as any;
+      }
+      if (path.endsWith('(marketing)')) {
+        return [
+          { name: 'page.tsx', isDirectory: () => false },
+          // biome-ignore lint/suspicious/noExplicitAny: test mock typecasting
+        ] as any;
+      }
+      // biome-ignore lint/suspicious/noExplicitAny: test mock typecasting
+      return [] as any;
+    });
+
+    const { GET } = await import('../route');
+    const req = new Request('http://localhost/api/dev/pages');
+    // biome-ignore lint/suspicious/noExplicitAny: test mock typecasting
+    const res = await GET(req as any);
+    const json = await res.json();
+
+    expect(res.status).toBe(200);
+    // Route group (marketing) is transparent — path should be '/', not '/(marketing)'
+    expect(json.data.pages).toEqual(
+      expect.arrayContaining([{ path: '/', label: 'Home' }]),
+    );
+    expect(
+      json.data.pages.every((p: { path: string }) => !p.path.includes('(')),
+    ).toBe(true);
+  });
+
+  it('returns empty array when readdirSync throws', async () => {
+    process.env.NODE_ENV = 'development';
+    const { readdirSync } = await import('node:fs');
+    vi.mocked(readdirSync).mockImplementation(() => {
+      throw new Error('ENOENT: no such file or directory');
+    });
+
+    const { GET } = await import('../route');
+    const req = new Request('http://localhost/api/dev/pages');
+    // biome-ignore lint/suspicious/noExplicitAny: test mock typecasting
+    const res = await GET(req as any);
+    const json = await res.json();
+
+    expect(res.status).toBe(200);
+    expect(json.data.pages).toEqual([]);
+  });
+
   it('throws NotFoundError in production', async () => {
     process.env.NODE_ENV = 'production';
     // Remove preview flag so env.NEXT_PUBLIC_VERCEL_ENV is undefined.
