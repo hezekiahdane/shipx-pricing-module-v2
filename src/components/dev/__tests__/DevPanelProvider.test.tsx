@@ -103,4 +103,47 @@ describe('DevPanelProvider', () => {
     expect(removeSpy).toHaveBeenCalledWith('keydown', expect.any(Function));
     removeSpy.mockRestore();
   });
+
+  it('removes debug CSS class when toggle is turned off', async () => {
+    const configWithDebug: DevPanelConfig = {
+      ...config,
+      debugToggles: [
+        { id: 'outline', label: 'Outlines', cssClass: 'debug-outlines' },
+      ],
+    };
+
+    function ToggleConsumer() {
+      const ctx = useContext(DevPanelContext);
+      return (
+        <div>
+          <button
+            type="button"
+            onClick={() => ctx?.setDebugToggle('outline', true)}
+          >
+            on
+          </button>
+          <button
+            type="button"
+            onClick={() => ctx?.setDebugToggle('outline', false)}
+          >
+            off
+          </button>
+        </div>
+      );
+    }
+
+    render(
+      <DevPanelProvider config={configWithDebug}>
+        <ToggleConsumer />
+      </DevPanelProvider>,
+    );
+
+    // Turn on — class should be added
+    await act(async () => fireEvent.click(screen.getByText('on')));
+    expect(document.body.classList.contains('debug-outlines')).toBe(true);
+
+    // Turn off — class should be removed (covers the else branch on line 61)
+    await act(async () => fireEvent.click(screen.getByText('off')));
+    expect(document.body.classList.contains('debug-outlines')).toBe(false);
+  });
 });
