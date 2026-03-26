@@ -2,6 +2,7 @@
 
 import { useParams } from 'next/navigation';
 import { env } from '@/lib/core/env';
+import { cn } from '@/lib/core/utils';
 import type { DevPanelContextValue } from './DevPanelProvider';
 import { AssetSection } from './sections/AssetSection';
 import { DebugSection } from './sections/DebugSection';
@@ -65,7 +66,10 @@ export function DevPanel({ ctx }: DevPanelProps) {
               Dev Panel
             </span>
             <span
-              className={`rounded border px-2 py-0.5 text-[10px] font-bold tracking-wider ${badge.className}`}
+              className={cn(
+                'rounded border px-2 py-0.5 text-[10px] font-bold tracking-wider',
+                badge.className,
+              )}
             >
               {badge.label}
             </span>

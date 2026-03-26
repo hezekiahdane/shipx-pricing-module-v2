@@ -1,6 +1,7 @@
 'use client';
 
 import { useParams, usePathname, useRouter } from 'next/navigation';
+import { cn } from '@/lib/core/utils';
 import type { PageStatus } from '../index';
 import { useDevPanel } from '../useDevPanel';
 
@@ -35,7 +36,7 @@ export function PagesSection() {
   const router = useRouter();
   const pathname = usePathname();
   const params = useParams();
-  const locale = typeof params?.locale === 'string' ? params.locale : '';
+  const locale = typeof params?.locale === 'string' ? params.locale : 'en';
 
   return (
     <div className="border-b border-neutral-800 py-2">
@@ -51,7 +52,11 @@ export function PagesSection() {
           <div
             key={page.path}
             data-testid="page-row"
-            className={`flex w-full items-center justify-between px-4 py-1.5 transition-colors hover:bg-neutral-800/60 ${isCurrentPage ? 'bg-neutral-800/60' : ''} ${isBlocked ? 'opacity-50' : ''}`}
+            className={cn(
+              'flex w-full items-center justify-between px-4 py-1.5 transition-colors hover:bg-neutral-800/60',
+              isCurrentPage && 'bg-neutral-800/60',
+              isBlocked && 'opacity-50',
+            )}
           >
             <button
               type="button"
@@ -61,10 +66,16 @@ export function PagesSection() {
               className="flex flex-1 items-center gap-2.5 text-left"
             >
               <span
-                className={`h-1.5 w-1.5 flex-shrink-0 rounded-full ${DOT_CLASS[page.status]}`}
+                className={cn(
+                  'h-1.5 w-1.5 flex-shrink-0 rounded-full',
+                  DOT_CLASS[page.status],
+                )}
               />
               <span
-                className={`text-xs ${isCurrentPage ? 'text-blue-400' : 'text-neutral-300'}`}
+                className={cn(
+                  'text-xs',
+                  isCurrentPage ? 'text-blue-400' : 'text-neutral-300',
+                )}
               >
                 {page.label}
               </span>
