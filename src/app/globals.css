@@ -205,3 +205,67 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* --- DEV PANEL DEBUG UTILITIES (dev-only classes toggled via DevPanel) --- */
+
+/* Outlines: red border on every element except the dev panel itself */
+.debug-outlines *:not([data-dev-panel], [data-dev-panel] *) {
+  /* biome-ignore lint/complexity/noImportantStyles: intentional debug override */
+  outline: 1px solid red !important;
+}
+
+/* Grid: subtle column grid overlay */
+.debug-grid {
+  background-image:
+    linear-gradient(rgba(99, 102, 241, 0.12) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(99, 102, 241, 0.12) 1px, transparent 1px);
+  background-size: 8px 8px;
+}
+
+/* Breakpoint: fixed badge showing current Tailwind breakpoint */
+.debug-bp::before {
+  content: "xs";
+  position: fixed;
+  bottom: 5.5rem;
+  left: 1rem;
+  z-index: 9997;
+  padding: 2px 8px;
+  background: #0d1117;
+  color: #4ade80;
+  font-family: monospace;
+  font-size: 11px;
+  font-weight: bold;
+  border-radius: 4px;
+  border: 1px solid #27272a;
+  pointer-events: none;
+}
+@media (min-width: 640px) {
+  .debug-bp::before {
+    content: "sm  (640px)";
+  }
+}
+@media (min-width: 768px) {
+  .debug-bp::before {
+    content: "md  (768px)";
+  }
+}
+@media (min-width: 1024px) {
+  .debug-bp::before {
+    content: "lg  (1024px)";
+  }
+}
+@media (min-width: 1280px) {
+  .debug-bp::before {
+    content: "xl  (1280px)";
+  }
+}
+@media (min-width: 1440px) {
+  .debug-bp::before {
+    content: "2xl (1440px)";
+  }
+}
+@media (min-width: 1920px) {
+  .debug-bp::before {
+    content: "3xl (1920px)";
+  }
+}

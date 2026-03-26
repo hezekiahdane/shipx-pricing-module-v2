@@ -4,9 +4,12 @@ import { getMessages } from 'next-intl/server';
 import { Analytics, SpeedInsights } from '@/lib/monitoring';
 import '@/app/globals.css';
 
+import { DevPanelWrapper } from '@/components/dev/DevPanelWrapper';
 import Footer from '@/components/layout/Footer';
 import Navbar from '@/components/layout/Navbar';
+import { devPanelConfig } from '@/config/dev-panel.config';
 import { siteConfig } from '@/lib/core/config/site';
+import { env } from '@/lib/core/env';
 
 export async function generateMetadata({
   params,
@@ -64,13 +67,27 @@ export default async function LocaleLayout({
   const { locale } = await params;
   const messages = await getMessages();
 
+  const isDev =
+    process.env.NODE_ENV === 'development' || // NODE_ENV: Next.js static analysis exception
+    env.NEXT_PUBLIC_VERCEL_ENV === 'preview';
+
   return (
     <html lang={locale}>
       <body className="font-body flex min-h-screen flex-col">
         <NextIntlClientProvider messages={messages} locale={locale}>
-          <Navbar />
-          <main className="flex-1">{children}</main>
-          <Footer />
+          {isDev ? (
+            <DevPanelWrapper config={devPanelConfig}>
+              <Navbar />
+              <main className="flex-1">{children}</main>
+              <Footer />
+            </DevPanelWrapper>
+          ) : (
+            <>
+              <Navbar />
+              <main className="flex-1">{children}</main>
+              <Footer />
+            </>
+          )}
         </NextIntlClientProvider>
         <Analytics />
         <SpeedInsights />
