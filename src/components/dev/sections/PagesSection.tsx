@@ -1,6 +1,6 @@
 'use client';
 
-import { usePathname, useRouter } from 'next/navigation';
+import { useParams, usePathname, useRouter } from 'next/navigation';
 import type { DevPanelPage, PageStatus } from '../index';
 
 const STATUS_BADGE: Record<PageStatus, { label: string; className: string }> = {
@@ -36,6 +36,8 @@ interface PagesSectionProps {
 export function PagesSection({ pages }: PagesSectionProps) {
   const router = useRouter();
   const pathname = usePathname();
+  const params = useParams();
+  const locale = typeof params?.locale === 'string' ? params.locale : '';
 
   return (
     <div className="border-b border-neutral-800 py-2">
@@ -50,7 +52,9 @@ export function PagesSection({ pages }: PagesSectionProps) {
           <button
             key={page.path}
             type="button"
-            onClick={() => router.push(page.path)}
+            onClick={() =>
+              router.push(locale ? `/${locale}${page.path}` : page.path)
+            }
             className={`flex w-full items-center justify-between px-4 py-1.5 text-left transition-colors hover:bg-neutral-800/60 ${isCurrentPage ? 'bg-neutral-800/60' : ''}`}
           >
             <span className="flex items-center gap-2.5">

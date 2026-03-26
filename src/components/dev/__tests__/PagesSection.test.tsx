@@ -1,5 +1,5 @@
 import { fireEvent } from '@testing-library/react';
-import { usePathname, useRouter } from 'next/navigation';
+import { useParams, usePathname, useRouter } from 'next/navigation';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { render, screen } from '@/test/utils';
 import type { DevPanelPage } from '../index';
@@ -9,6 +9,7 @@ import { PagesSection } from '../sections/PagesSection';
 vi.mock('next/navigation', () => ({
   useRouter: vi.fn(),
   usePathname: vi.fn(),
+  useParams: vi.fn(),
 }));
 
 const pages: DevPanelPage[] = [
@@ -19,9 +20,11 @@ const pages: DevPanelPage[] = [
 
 describe('PagesSection', () => {
   beforeEach(() => {
-    vi.mocked(usePathname).mockReturnValue('/');
+    vi.mocked(usePathname).mockReturnValue('/en');
     // biome-ignore lint/suspicious/noExplicitAny: test mock typecasting
     vi.mocked(useRouter).mockReturnValue({ push: vi.fn() } as any);
+    // biome-ignore lint/suspicious/noExplicitAny: test mock typecasting
+    vi.mocked(useParams).mockReturnValue({ locale: 'en' } as any);
   });
 
   it('renders all pages from config', () => {
@@ -44,6 +47,6 @@ describe('PagesSection', () => {
     vi.mocked(useRouter).mockReturnValue({ push: mockPush } as any);
     render(<PagesSection pages={pages} />);
     fireEvent.click(screen.getByText('About'));
-    expect(mockPush).toHaveBeenCalledWith('/about');
+    expect(mockPush).toHaveBeenCalledWith('/en/about');
   });
 });
