@@ -37,6 +37,7 @@ export interface DevPanelConfig {
 // export type { DevPanelContextValue } from './DevPanelProvider'; // Task 4
 // export { DevPanel } from './DevPanel';                   // Task 10
 
+export { DevPanel } from './DevPanel';
 export type { DevPanelContextValue } from './DevPanelProvider';
 export { DevPanelProvider } from './DevPanelProvider';
 export { useDevPanel } from './useDevPanel';
