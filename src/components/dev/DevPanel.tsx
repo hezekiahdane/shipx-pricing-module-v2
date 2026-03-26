@@ -41,7 +41,14 @@ export function DevPanel({ ctx }: DevPanelProps) {
   const badge =
     ENV_BADGE[envKey as keyof typeof ENV_BADGE] ?? ENV_BADGE.development;
 
-  const { config, togglePanel, debugToggles, setDebugToggle } = ctx;
+  const {
+    config,
+    togglePanel,
+    debugToggles,
+    setDebugToggle,
+    registeredSimulators,
+    unregisteredFormCount,
+  } = ctx;
 
   return (
     <div data-dev-panel="true">
@@ -79,7 +86,9 @@ export function DevPanel({ ctx }: DevPanelProps) {
               onToggle={setDebugToggle}
             />
           )}
-          <StateSimSection />
+          {(registeredSimulators.length > 0 || unregisteredFormCount > 0) && (
+            <StateSimSection />
+          )}
           <EnvSection projectName={config.projectName} locale={locale} />
 
           {/* Footer */}

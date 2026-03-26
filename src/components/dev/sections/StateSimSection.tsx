@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/core';
 import { useDevPanel } from '../useDevPanel';
 
 export function StateSimSection() {
@@ -38,11 +39,12 @@ export function StateSimSection() {
                   key={state}
                   type="button"
                   onClick={() => setSimulatedState(sim.id, state)}
-                  className={`flex-1 rounded border px-2 py-1 text-[10px] font-bold uppercase tracking-wider transition-colors ${
+                  className={cn(
+                    'flex-1 rounded border px-2 py-1 text-[10px] font-bold uppercase tracking-wider transition-colors',
                     isActive
                       ? 'border-blue-500 bg-blue-900/30 text-blue-300'
-                      : 'border-neutral-700 bg-neutral-800 text-neutral-500 hover:border-neutral-600'
-                  }`}
+                      : 'border-neutral-700 bg-neutral-800 text-neutral-500 hover:border-neutral-600',
+                  )}
                 >
                   {state}
                 </button>
