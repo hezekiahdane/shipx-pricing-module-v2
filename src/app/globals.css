@@ -208,8 +208,8 @@
 
 /* --- DEV PANEL DEBUG UTILITIES (dev-only classes toggled via DevPanel) --- */
 
-/* Outlines: red border on every element */
-.debug-outlines * {
+/* Outlines: red border on every element except the dev panel itself */
+.debug-outlines *:not([data-dev-panel], [data-dev-panel] *) {
   /* biome-ignore lint/complexity/noImportantStyles: intentional debug override */
   outline: 1px solid red !important;
 }

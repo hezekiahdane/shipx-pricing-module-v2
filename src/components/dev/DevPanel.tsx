@@ -52,7 +52,7 @@ export function DevPanel({ ctx }: DevPanelProps) {
   } = ctx;
 
   return (
-    <>
+    <div data-dev-panel="true">
       {/* FAB — always visible, toggles panel */}
       <button
         type="button"
@@ -108,6 +108,6 @@ export function DevPanel({ ctx }: DevPanelProps) {
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 }
