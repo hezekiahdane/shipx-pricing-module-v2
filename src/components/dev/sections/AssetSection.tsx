@@ -1,6 +1,9 @@
 'use client';
 
-import type { DevPanelAsset } from '../index';
+interface DevPanelAsset {
+  label: string;
+  value: string;
+}
 
 interface AssetSectionProps {
   assets: DevPanelAsset[];

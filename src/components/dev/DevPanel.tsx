@@ -3,7 +3,6 @@
 import { useParams } from 'next/navigation';
 import { env } from '@/lib/core/env';
 import type { DevPanelContextValue } from './DevPanelProvider';
-import { AssetSection } from './sections/AssetSection';
 import { DebugSection } from './sections/DebugSection';
 import { EnvSection } from './sections/EnvSection';
 import { PagesSection } from './sections/PagesSection';
@@ -79,7 +78,7 @@ export function DevPanel({ ctx }: DevPanelProps) {
           </div>
 
           {/* Sections */}
-          <PagesSection pages={config.pages} />
+          <PagesSection />
           {config.debugToggles && config.debugToggles.length > 0 && (
             <DebugSection
               toggles={config.debugToggles}
@@ -87,17 +86,14 @@ export function DevPanel({ ctx }: DevPanelProps) {
               onToggle={setDebugToggle}
             />
           )}
-          {config.stateSimulators && config.stateSimulators.length > 0 && (
+          {(ctx.registeredSimulators?.length ?? 0) > 0 && (
             <StateSimSection
-              simulators={config.stateSimulators}
+              simulators={ctx.registeredSimulators ?? []}
               activeStates={simulatedStates}
               onStateChange={setSimulatedState}
             />
           )}
           <EnvSection projectName={config.projectName} locale={locale} />
-          {config.assets && config.assets.length > 0 && (
-            <AssetSection assets={config.assets} />
-          )}
 
           {/* Footer */}
           <div className="flex items-center justify-between px-4 py-2">
