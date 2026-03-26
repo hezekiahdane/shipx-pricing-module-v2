@@ -3,6 +3,7 @@
 import { useParams } from 'next/navigation';
 import { env } from '@/lib/core/env';
 import type { DevPanelContextValue } from './DevPanelProvider';
+import { AssetSection } from './sections/AssetSection';
 import { DebugSection } from './sections/DebugSection';
 import { EnvSection } from './sections/EnvSection';
 import { PagesSection } from './sections/PagesSection';
@@ -41,14 +42,7 @@ export function DevPanel({ ctx }: DevPanelProps) {
   const badge =
     ENV_BADGE[envKey as keyof typeof ENV_BADGE] ?? ENV_BADGE.development;
 
-  const {
-    config,
-    togglePanel,
-    debugToggles,
-    setDebugToggle,
-    registeredSimulators,
-    unregisteredFormCount,
-  } = ctx;
+  const { config, togglePanel, debugToggles, setDebugToggle } = ctx;
 
   return (
     <div data-dev-panel="true">
@@ -86,9 +80,8 @@ export function DevPanel({ ctx }: DevPanelProps) {
               onToggle={setDebugToggle}
             />
           )}
-          {(registeredSimulators.length > 0 || unregisteredFormCount > 0) && (
-            <StateSimSection />
-          )}
+          <StateSimSection />
+          <AssetSection />
           <EnvSection projectName={config.projectName} locale={locale} />
 
           {/* Footer */}

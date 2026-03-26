@@ -14,17 +14,13 @@ export function StateSimSection() {
   const isEmpty =
     registeredSimulators.length === 0 && unregisteredFormCount === 0;
 
+  if (isEmpty) return null;
+
   return (
     <div className="border-b border-neutral-800 py-2">
       <p className="px-4 pb-2 text-[10px] font-semibold uppercase tracking-widest text-neutral-600">
         State Simulator
       </p>
-
-      {isEmpty && (
-        <p className="px-4 pb-2 text-[10px] text-neutral-600">
-          No simulators registered.
-        </p>
-      )}
 
       {registeredSimulators.map((sim) => (
         <div key={sim.id} className="px-4 pb-2">

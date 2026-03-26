@@ -36,7 +36,12 @@ const baseCtx = {
 
 describe('DevPanel', () => {
   it('renders section headings when open with simulators in context', () => {
-    render(<DevPanel ctx={baseCtx} />);
+    render(<DevPanel ctx={baseCtx} />, {
+      devPanelValue: {
+        registeredSimulators: simulators,
+        config,
+      },
+    });
     expect(screen.getByText('Pages')).toBeDefined();
     expect(screen.getByText('Debug')).toBeDefined();
     expect(screen.getByText('State Simulator')).toBeDefined();
@@ -44,21 +49,30 @@ describe('DevPanel', () => {
   });
 
   it('renders project name in header', () => {
-    render(<DevPanel ctx={baseCtx} />);
+    render(<DevPanel ctx={baseCtx} />, {
+      devPanelValue: { config },
+    });
     expect(screen.getByText('Dev Panel')).toBeDefined();
     expect(screen.getByText('Test Project Playground')).toBeDefined();
   });
 
   it('does not render optional sections when their data is absent', () => {
+    const minimalConfig = {
+      projectName: 'Min',
+      pages: [{ label: 'Home', path: '/', status: 'active' as const }],
+    };
     const minimalCtx = {
       ...baseCtx,
       registeredSimulators: [],
-      config: {
-        projectName: 'Min',
-        pages: [{ label: 'Home', path: '/', status: 'active' as const }],
-      },
+      config: minimalConfig,
     };
-    render(<DevPanel ctx={minimalCtx} />);
+    render(<DevPanel ctx={minimalCtx} />, {
+      devPanelValue: {
+        registeredSimulators: [],
+        unregisteredFormCount: 0,
+        config: minimalConfig,
+      },
+    });
     expect(screen.queryByText('Debug')).toBeNull();
     expect(screen.queryByText('State Simulator')).toBeNull();
     // Required sections always render

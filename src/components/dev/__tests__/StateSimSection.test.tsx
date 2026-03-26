@@ -85,14 +85,15 @@ describe('StateSimSection', () => {
     expect(screen.queryByText(/form\(s\) detected/i)).toBeNull();
   });
 
-  it('shows empty state when no simulators and no unregistered forms', () => {
-    render(<StateSimSection />, {
+  it('renders nothing when no simulators and no unregistered forms', () => {
+    const { container } = render(<StateSimSection />, {
       devPanelValue: {
         registeredSimulators: [],
         simulatedStates: {},
         unregisteredFormCount: 0,
       },
     });
-    expect(screen.getByText('No simulators registered.')).toBeDefined();
+    // Section self-manages empty state by returning null
+    expect(container.firstChild).toBeNull();
   });
 });
