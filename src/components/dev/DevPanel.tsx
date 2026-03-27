@@ -59,9 +59,9 @@ export function DevPanel({ ctx }: DevPanelProps) {
 
       {/* Panel */}
       {ctx.isOpen && (
-        <div className="fixed bottom-20 right-6 z-[9998] w-[340px] overflow-hidden rounded-xl border border-neutral-800 bg-[#0d1117] font-mono shadow-2xl">
-          {/* Header */}
-          <div className="flex items-center justify-between border-b border-neutral-800 bg-neutral-900/80 px-4 py-3">
+        <div className="fixed bottom-20 right-6 z-[9998] flex w-[340px] max-h-[calc(100vh-6rem)] flex-col overflow-hidden rounded-xl border border-neutral-800 bg-[#0d1117] font-mono shadow-2xl">
+          {/* Header — sticky */}
+          <div className="flex shrink-0 items-center justify-between border-b border-neutral-800 bg-neutral-900/80 px-4 py-3">
             <span className="text-[11px] font-bold uppercase tracking-widest text-neutral-500">
               Dev Panel
             </span>
@@ -75,21 +75,23 @@ export function DevPanel({ ctx }: DevPanelProps) {
             </span>
           </div>
 
-          {/* Sections */}
-          <PagesSection />
-          {config.debugToggles && config.debugToggles.length > 0 && (
-            <DebugSection
-              toggles={config.debugToggles}
-              activeToggles={debugToggles}
-              onToggle={setDebugToggle}
-            />
-          )}
-          <StateSimSection />
-          <AssetSection />
-          <EnvSection projectName={config.projectName} locale={locale} />
+          {/* Sections — scrollable */}
+          <div className="flex-1 overflow-y-auto [scrollbar-color:#27272a_transparent] [scrollbar-width:thin]">
+            <PagesSection />
+            {config.debugToggles && config.debugToggles.length > 0 && (
+              <DebugSection
+                toggles={config.debugToggles}
+                activeToggles={debugToggles}
+                onToggle={setDebugToggle}
+              />
+            )}
+            <StateSimSection />
+            <AssetSection />
+            <EnvSection projectName={config.projectName} locale={locale} />
+          </div>
 
-          {/* Footer */}
-          <div className="flex items-center justify-between px-4 py-2">
+          {/* Footer — sticky */}
+          <div className="flex shrink-0 items-center justify-between border-t border-neutral-800 bg-neutral-900/60 px-4 py-2">
             <span className="text-[10px] text-neutral-700">` to close</span>
             <span className="text-[10px] text-neutral-700">
               {config.projectName} Playground
