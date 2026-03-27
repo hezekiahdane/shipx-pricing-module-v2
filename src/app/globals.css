@@ -214,8 +214,13 @@
   outline: 1px solid red !important;
 }
 
-/* Grid: subtle column grid overlay */
-.debug-grid {
+/* Grid: fixed full-viewport grid overlay on top of all content */
+.debug-grid::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 9996;
+  pointer-events: none;
   background-image:
     linear-gradient(rgba(99, 102, 241, 0.12) 1px, transparent 1px),
     linear-gradient(90deg, rgba(99, 102, 241, 0.12) 1px, transparent 1px);
