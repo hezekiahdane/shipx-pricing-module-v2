@@ -4,12 +4,14 @@ import { getMessages } from 'next-intl/server';
 import { Analytics, SpeedInsights } from '@/lib/monitoring';
 import '@/app/globals.css';
 
+import { JsonLd } from '@/components/common/JsonLd';
 import { DevPanelWrapper } from '@/components/dev/DevPanelWrapper';
 import Footer from '@/components/layout/Footer';
 import Navbar from '@/components/layout/Navbar';
 import { devPanelConfig } from '@/config/dev-panel.config';
 import { siteConfig } from '@/lib/core/config/site';
 import { env } from '@/lib/core/env';
+import { createOrganizationSchema, createWebSiteSchema } from '@/lib/seo';
 
 export async function generateMetadata({
   params,
@@ -21,6 +23,11 @@ export async function generateMetadata({
   const title = siteConfig.name;
   const description = siteConfig.description;
 
+  // Build hreflang alternates: { en: 'https://...', jp: 'https://...' }
+  const languages = Object.fromEntries(
+    siteConfig.locales.map((l) => [l, `${siteConfig.url}/${l}`]),
+  );
+
   return {
     title: {
       default: title,
@@ -28,6 +35,14 @@ export async function generateMetadata({
     },
     description,
     metadataBase: new URL(siteConfig.url),
+    icons: {
+      icon: '/favicon.ico',
+      shortcut: '/favicon.ico',
+      apple: '/apple-touch-icon.png',
+    },
+    alternates: {
+      languages,
+    },
     openGraph: {
       title,
       description,
@@ -71,9 +86,21 @@ export default async function LocaleLayout({
     process.env.NODE_ENV === 'development' || // NODE_ENV: Next.js static analysis exception
     env.NEXT_PUBLIC_VERCEL_ENV === 'preview';
 
+  const orgSchema = createOrganizationSchema({
+    name: siteConfig.name,
+    url: siteConfig.url,
+    sameAs: Object.values(siteConfig.social).filter(Boolean),
+  });
+
+  const websiteSchema = createWebSiteSchema({
+    name: siteConfig.name,
+    url: siteConfig.url,
+  });
+
   return (
     <html lang={locale}>
       <body className="font-body flex min-h-screen flex-col">
+        <JsonLd schema={[orgSchema, websiteSchema]} />
         <NextIntlClientProvider messages={messages} locale={locale}>
           {isDev ? (
             <DevPanelWrapper config={devPanelConfig}>
