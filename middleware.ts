@@ -6,6 +6,14 @@ import { buildCspHeader, generateCspNonce } from './src/lib/core/security/csp';
 const intlMiddleware = createMiddleware(routing);
 
 export default function middleware(request: NextRequest) {
+  // Maintenance mode — rewrite all traffic to /maintenance.
+  // Use rewrite (not redirect): a redirect lets intlMiddleware re-prefix the path
+  // (/maintenance → /en/maintenance → triggers check again → infinite loop).
+  // Enable: set MAINTENANCE_MODE=true in Vercel env vars, then redeploy.
+  if (process.env.MAINTENANCE_MODE === 'true') {
+    return NextResponse.rewrite(new URL('/maintenance', request.url));
+  }
+
   // Both env reads use process.env directly — middleware.ts runs before the
   // Next.js module graph, so @/lib/core/env (Zod-validated) is not available
   // here. NODE_ENV is the standard Next.js static analysis exception; reading

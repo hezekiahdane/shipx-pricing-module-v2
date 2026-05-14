@@ -193,6 +193,45 @@ npm run lint     # must pass with zero warnings/errors
 
 ---
 
+## Built-in Features
+
+These are included in every project cloned from base_system. Do not re-implement them.
+
+### Maintenance Mode
+
+Redirect all traffic to a "Coming Soon" page with a single env var — no code change needed.
+
+**Files:**
+- `src/app/maintenance/page.tsx` — static holding page (reads `NEXT_PUBLIC_SITE_NAME`)
+- `src/app/maintenance/layout.tsx` — standalone `<html>/<body>` + CSS (required — see Layout Gotcha below)
+- `middleware.ts` — maintenance check runs first, before intl/CSP/dev-panel logic
+
+**To enable:** Set `MAINTENANCE_MODE=true` in Vercel env vars → redeploy (~1 min).
+**To disable:** Remove or set `MAINTENANCE_MODE=false` → redeploy.
+
+**Why `rewrite` not `redirect`:** A redirect to `/maintenance` is re-prefixed by `intlMiddleware` to `/en/maintenance`, which re-triggers the maintenance check → infinite redirect loop. `rewrite` serves the page in-place with no browser round-trip.
+
+**Customize:** Edit `src/app/maintenance/page.tsx` — uses Tailwind + CSS vars (`--background`, `--foreground`) so it inherits the project theme automatically.
+
+### Layout Architecture Gotcha
+
+`src/app/layout.tsx` is a **passthrough** — it only returns `children`. All real layout work (`<html>`, `<body>`, fonts, `globals.css`, providers) lives in `src/app/[locale]/layout.tsx`.
+
+**Consequence:** Any page added **outside** `[locale]/` must have its own `layout.tsx` that provides `<html>/<body>` and imports `globals.css`. Without it, Tailwind CSS will not apply.
+
+```
+src/app/
+  layout.tsx              ← passthrough only (return children)
+  [locale]/
+    layout.tsx            ← real html/body/CSS/fonts/providers
+    page.tsx
+  maintenance/
+    layout.tsx            ← must have its own html/body + globals.css import
+    page.tsx
+```
+
+---
+
 ## Project-Specific Overrides
 
 When cloning base_system for a new project, add project-specific rules below this line. These override or extend the base rules above.
@@ -210,3 +249,42 @@ Examples of what to add here:
 <!-- PROJECT OVERRIDES START -->
 
 <!-- PROJECT OVERRIDES END -->
+
+<!-- code-review-graph MCP tools -->
+## MCP Tools: code-review-graph
+
+**IMPORTANT: This project has a knowledge graph. ALWAYS use the
+code-review-graph MCP tools BEFORE using Grep/Glob/Read to explore
+the codebase.** The graph is faster, cheaper (fewer tokens), and gives
+you structural context (callers, dependents, test coverage) that file
+scanning cannot.
+
+### When to use graph tools FIRST
+
+- **Exploring code**: `semantic_search_nodes` or `query_graph` instead of Grep
+- **Understanding impact**: `get_impact_radius` instead of manually tracing imports
+- **Code review**: `detect_changes` + `get_review_context` instead of reading entire files
+- **Finding relationships**: `query_graph` with callers_of/callees_of/imports_of/tests_for
+- **Architecture questions**: `get_architecture_overview` + `list_communities`
+
+Fall back to Grep/Glob/Read **only** when the graph doesn't cover what you need.
+
+### Key Tools
+
+| Tool | Use when |
+|------|----------|
+| `detect_changes` | Reviewing code changes — gives risk-scored analysis |
+| `get_review_context` | Need source snippets for review — token-efficient |
+| `get_impact_radius` | Understanding blast radius of a change |
+| `get_affected_flows` | Finding which execution paths are impacted |
+| `query_graph` | Tracing callers, callees, imports, tests, dependencies |
+| `semantic_search_nodes` | Finding functions/classes by name or keyword |
+| `get_architecture_overview` | Understanding high-level codebase structure |
+| `refactor_tool` | Planning renames, finding dead code |
+
+### Workflow
+
+1. The graph auto-updates on file changes (via hooks).
+2. Use `detect_changes` for code review.
+3. Use `get_affected_flows` to understand impact.
+4. Use `query_graph` pattern="tests_for" to check coverage.
