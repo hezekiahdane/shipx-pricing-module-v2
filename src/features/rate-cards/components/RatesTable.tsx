@@ -16,7 +16,7 @@ interface RatesTableProps {
   transitByZone?: Record<string, TransitInfo>;
 }
 
-const PAGE_SIZE = 10;
+const PAGE_SIZE = 20;
 
 function formatPrice(value: string | null): string {
   if (value == null) return '—';
