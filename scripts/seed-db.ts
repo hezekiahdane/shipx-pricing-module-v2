@@ -5,16 +5,18 @@
  *   npx tsx scripts/seed-db.ts
  *
  * It will:
- *   1. Read Rate Cards.csv → populate rate_cards table
- *   2. Read any other *.csv files in the same folder → populate rates table
+ *   1. Read "Rate Cards - New.csv" → upsert rate_cards (with tier discounts)
+ *      Falls back to "Rate Cards.csv" if the new file is absent.
+ *   2. Delete any codes no longer present in the catalog (cascades to rates).
+ *   3. Read any other *.csv files in the same folder → upsert rates table
  *      (each file is matched to a card code by scanning its filename)
  */
 
 import { parse as parseCsv } from 'csv-parse/sync';
 import dotenv from 'dotenv';
-import { eq } from 'drizzle-orm';
+import { eq, notInArray } from 'drizzle-orm';
 import { drizzle } from 'drizzle-orm/postgres-js';
-import { readdirSync, readFileSync } from 'fs';
+import { existsSync, readdirSync, readFileSync } from 'fs';
 import { join } from 'path';
 import postgres from 'postgres';
 import { rateCards, rates } from '../src/lib/database/schema';
@@ -22,7 +24,8 @@ import { rateCards, rates } from '../src/lib/database/schema';
 dotenv.config({ path: '.env.local' });
 
 const DOCS_DIR = join(process.cwd(), 'docs', 'rate_cards');
-const CATALOG_FILE = 'Rate Cards.csv';
+const NEW_CATALOG_FILE = 'Rate Cards - New.csv';
+const OLD_CATALOG_FILE = 'Rate Cards.csv';
 
 // ─── Database connection ───────────────────────────────────────────────────
 
@@ -32,44 +35,84 @@ const client = postgres(process.env.DATABASE_URL!, {
 });
 const db = drizzle(client, { schema: { rateCards, rates } });
 
-// ─── Parse Rate Cards catalog ──────────────────────────────────────────────
+// ─── Helpers ───────────────────────────────────────────────────────────────
 
-function parseRateCardsCatalog() {
-  const content = readFileSync(join(DOCS_DIR, CATALOG_FILE), 'utf-8');
+/** Strip bullet/separator characters from product names and normalise whitespace. */
+function cleanName(raw: string): string {
+  // Replace any bullet-like chars (•, ·, ?, and Unicode replacement char)
+  return raw.replace(/[•·�]/g, '·').trim();
+}
+
+/** Parse a "1.5%" discount string → "1.50" numeric string, or null. */
+function parseDiscount(raw: string | undefined): string | null {
+  if (!raw?.trim()) return null;
+  const n = parseFloat(raw.replace('%', ''));
+  return Number.isNaN(n) ? null : n.toFixed(2);
+}
+
+// ─── Parse Rate Cards catalog (new format) ────────────────────────────────
+
+type CardRow = {
+  code: string;
+  productName: string;
+  category: string | null;
+  discountPublic: string | null;
+  discountTier1: string | null;
+  discountTier2: string | null;
+  discountTier3: string | null;
+  discountTier4: string | null;
+  discountTier5: string | null;
+  discountPt: string | null;
+};
+
+function parseNewCatalog(): CardRow[] {
+  const filePath = join(DOCS_DIR, NEW_CATALOG_FILE);
+  const content = readFileSync(filePath, 'utf-8');
+  // Skip the first 3 rows (header + 2 threshold description rows)
   const rows = parseCsv(content, { skip_empty_lines: false }) as string[][];
 
-  const cards: {
-    code: string;
-    productName: string;
-    category: string | null;
-    status: string;
-    sourceFile: string | null;
-    effectiveDate: string | null;
-  }[] = [];
-
-  for (const row of rows.slice(1)) {
-    const [code, productName, category, status, sourceFile] = row;
-    // Skip section-header rows (empty product name)
+  const cards: CardRow[] = [];
+  for (const row of rows.slice(3)) {
+    // Columns: Code, Product Name, Category, Public, T1, T2, T3, T4, T5, PT
+    const [code, productName, category, pub, t1, t2, t3, t4, t5, pt] = row;
     if (!code?.trim() || !productName?.trim()) continue;
-
-    // Try to extract effective date from the source filename (DD.MM.YYYY)
-    let effectiveDate: string | null = null;
-    if (sourceFile) {
-      const m = sourceFile.match(/(\d{2})\.(\d{2})\.(\d{4})/);
-      if (m) effectiveDate = `${m[3]}-${m[2]}-${m[1]}`;
-    }
 
     cards.push({
       code: code.trim(),
-      productName: productName.trim(),
+      productName: cleanName(productName),
+      category: category?.trim() || null,
+      discountPublic: parseDiscount(pub),
+      discountTier1: parseDiscount(t1),
+      discountTier2: parseDiscount(t2),
+      discountTier3: parseDiscount(t3),
+      discountTier4: parseDiscount(t4),
+      discountTier5: parseDiscount(t5),
+      discountPt: pt?.trim() || null,
+    });
+  }
+  return cards;
+}
+
+// ─── Parse Rate Cards catalog (old format, fallback) ──────────────────────
+
+function parseOldCatalog() {
+  const content = readFileSync(join(DOCS_DIR, OLD_CATALOG_FILE), 'utf-8');
+  const rows = parseCsv(content, { skip_empty_lines: false }) as string[][];
+
+  return rows
+    .slice(1)
+    .filter((row) => row[0]?.trim() && row[1]?.trim())
+    .map(([code, productName, category, status, sourceFile]) => ({
+      code: code.trim(),
+      productName: cleanName(productName),
       category: category?.trim() || null,
       status: status?.trim() || 'Active',
       sourceFile: sourceFile?.trim() || null,
-      effectiveDate,
-    });
-  }
-
-  return cards;
+      effectiveDate: (() => {
+        const m = sourceFile?.match(/(\d{2})\.(\d{2})\.(\d{4})/);
+        return m ? `${m[3]}-${m[2]}-${m[1]}` : null;
+      })(),
+    }));
 }
 
 // ─── Parse a rates CSV file ────────────────────────────────────────────────
@@ -161,10 +204,25 @@ function parseRatesCsv(filePath: string): {
 // ─── Main ──────────────────────────────────────────────────────────────────
 
 async function main() {
-  // 1. Seed rate cards catalog
-  console.log('Seeding rate_cards...');
-  const cardData = parseRateCardsCatalog();
+  // 1. Parse catalog — prefer new format, fall back to old
+  const useNew = existsSync(join(DOCS_DIR, NEW_CATALOG_FILE));
+  console.log(`Using catalog: ${useNew ? NEW_CATALOG_FILE : OLD_CATALOG_FILE}`);
 
+  const cardData = useNew
+    ? parseNewCatalog()
+    : parseOldCatalog().map((c) => ({
+        ...c,
+        discountPublic: null,
+        discountTier1: null,
+        discountTier2: null,
+        discountTier3: null,
+        discountTier4: null,
+        discountTier5: null,
+        discountPt: null,
+      }));
+
+  // 2. Upsert rate cards
+  console.log('\nSeeding rate_cards...');
   for (const card of cardData) {
     await db
       .insert(rateCards)
@@ -174,33 +232,48 @@ async function main() {
         set: {
           productName: card.productName,
           category: card.category,
-          status: card.status,
-          sourceFile: card.sourceFile,
-          effectiveDate: card.effectiveDate,
+          discountPublic: card.discountPublic,
+          discountTier1: card.discountTier1,
+          discountTier2: card.discountTier2,
+          discountTier3: card.discountTier3,
+          discountTier4: card.discountTier4,
+          discountTier5: card.discountTier5,
+          discountPt: card.discountPt,
         },
       });
     console.log(`  ✓ ${card.code}: ${card.productName}`);
   }
-  console.log(`  → ${cardData.length} rate cards upserted.\n`);
+  console.log(`  → ${cardData.length} rate cards upserted.`);
 
-  // 2. Seed rates from any rates CSV files present
+  // 3. Delete cards no longer in the catalog (cascades to their rates)
+  const activeCodes = cardData.map((c) => c.code);
+  const deleted = await db
+    .delete(rateCards)
+    .where(notInArray(rateCards.code, activeCodes))
+    .returning({ code: rateCards.code });
+  if (deleted.length > 0) {
+    console.log(
+      `  ✗ Deleted ${deleted.length} removed card(s): ${deleted.map((d) => d.code).join(', ')}`,
+    );
+  }
+
+  // 4. Seed rates from any rates CSV files present
+  const SKIP_FILES = new Set([NEW_CATALOG_FILE, OLD_CATALOG_FILE]);
   const ratesFiles = readdirSync(DOCS_DIR).filter(
-    (f) => f.endsWith('.csv') && f !== CATALOG_FILE,
+    (f) => f.endsWith('.csv') && !SKIP_FILES.has(f),
   );
 
   if (ratesFiles.length === 0) {
-    console.log('No rates CSV files found. Done.');
+    console.log('\nNo rates CSV files found. Done.');
     await client.end();
     return;
   }
 
-  const knownCodes = cardData.map((c) => c.code);
-
+  console.log('');
   for (const file of ratesFiles) {
     console.log(`Processing: ${file}`);
 
-    // Match file to a card code by scanning the filename
-    const matchedCode = knownCodes.find((code) =>
+    const matchedCode = activeCodes.find((code) =>
       file.toUpperCase().includes(code.toUpperCase()),
     );
 
@@ -215,7 +288,6 @@ async function main() {
       `  ${entries.length} rate entries (effective: ${effectiveDate ?? 'unknown'})`,
     );
 
-    // Update effective date on the card if found in the rates file
     if (effectiveDate) {
       await db
         .update(rateCards)
@@ -223,14 +295,12 @@ async function main() {
         .where(eq(rateCards.code, matchedCode));
     }
 
-    // Batch-insert rates (100 rows at a time)
     const BATCH = 100;
     let upserted = 0;
     for (let i = 0; i < entries.length; i += BATCH) {
       const batch = entries
         .slice(i, i + BATCH)
         .map((e) => ({ cardCode: matchedCode, ...e }));
-
       await db
         .insert(rates)
         .values(batch)
@@ -238,7 +308,6 @@ async function main() {
           target: [rates.cardCode, rates.destination, rates.weightKg],
           set: { price: rates.price, zoneCode: rates.zoneCode },
         });
-
       upserted += batch.length;
     }
     console.log(`  ✓ ${upserted} rates upserted for ${matchedCode}\n`);

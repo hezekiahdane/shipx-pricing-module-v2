@@ -31,6 +31,14 @@ export const rateCards = pgTable('rate_cards', {
   effectiveDate: date('effective_date'),
   currency: text('currency').default('VND'),
   sourceFile: text('source_file'),
+  // Tier discount percentages (e.g. 1.5 = 1.5%). NULL = not applicable.
+  discountPublic: numeric('discount_public', { precision: 5, scale: 2 }),
+  discountTier1: numeric('discount_tier1', { precision: 5, scale: 2 }),
+  discountTier2: numeric('discount_tier2', { precision: 5, scale: 2 }),
+  discountTier3: numeric('discount_tier3', { precision: 5, scale: 2 }),
+  discountTier4: numeric('discount_tier4', { precision: 5, scale: 2 }),
+  discountTier5: numeric('discount_tier5', { precision: 5, scale: 2 }),
+  discountPt: text('discount_pt'), // 'Contact Manager' or NULL
   updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow(),
 });
 
