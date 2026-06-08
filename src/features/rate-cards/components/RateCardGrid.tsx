@@ -1,4 +1,5 @@
-import Link from 'next/link';
+'use client';
+import { useRouter } from 'next/navigation';
 import { Fragment } from 'react';
 import type { RateCard } from '@/lib/database/schema';
 
@@ -45,7 +46,7 @@ const TIERS: {
 ];
 
 // Total column count (used for colSpan on section headers)
-const COL_COUNT = 4 + TIERS.length + 1 + 1; // code+name+cat+status + tiers + PT + view
+const COL_COUNT = 4 + TIERS.length + 1; // code+name+cat+status + tiers + PT
 
 // ─── Section grouping ──────────────────────────────────────────────────────
 
@@ -122,6 +123,8 @@ const ROW_BG: Record<string, string> = {
 // ─── Component ─────────────────────────────────────────────────────────────
 
 export default function RateCardGrid({ cards }: RateCardGridProps) {
+  const router = useRouter();
+
   if (cards.length === 0) {
     return <p className="text-sm text-gray-500">No rate cards available.</p>;
   }
@@ -160,7 +163,6 @@ export default function RateCardGrid({ cards }: RateCardGridProps) {
             <th className="px-3 py-3 text-center text-xs font-semibold uppercase tracking-wide">
               PT
             </th>
-            <th className="px-3 py-3" />
           </tr>
         </thead>
 
@@ -186,7 +188,8 @@ export default function RateCardGrid({ cards }: RateCardGridProps) {
                 return (
                   <tr
                     key={c.code}
-                    className={`transition-colors hover:bg-gray-50 ${rowBg}`}
+                    onClick={() => router.push(`/cards/${c.code}`)}
+                    className={`cursor-pointer transition-colors hover:bg-gray-50 ${rowBg}`}
                   >
                     <td className="px-3 py-2.5 font-mono text-xs font-medium text-gray-500">
                       {c.code}
@@ -208,14 +211,6 @@ export default function RateCardGrid({ cards }: RateCardGridProps) {
                     ))}
                     <td className="px-3 py-2.5 text-center text-xs text-gray-400">
                       PT
-                    </td>
-                    <td className="px-3 py-2.5 text-right">
-                      <Link
-                        href={`/cards/${c.code}`}
-                        className="text-xs font-medium text-blue-600 hover:text-blue-800"
-                      >
-                        Rates →
-                      </Link>
                     </td>
                   </tr>
                 );

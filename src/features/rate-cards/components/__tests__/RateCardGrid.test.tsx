@@ -1,6 +1,11 @@
 import { render, screen } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import userEvent from '@testing-library/user-event';
+import { describe, expect, it, vi } from 'vitest';
 import type { RateCard } from '@/lib/database/schema';
+
+const { pushMock } = vi.hoisted(() => ({ pushMock: vi.fn() }));
+vi.mock('next/navigation', () => ({ useRouter: () => ({ push: pushMock }) }));
+
 import RateCardGrid from '../RateCardGrid';
 
 type CardSummary = Pick<
@@ -90,10 +95,10 @@ describe('RateCardGrid', () => {
     expect(screen.getByText('EXPRESS — DHL')).toBeInTheDocument();
   });
 
-  it('renders "Rates →" links to the detail page', () => {
+  it('navigates to the detail page when a row is clicked', async () => {
     render(<RateCardGrid cards={mockCards} />);
-    const links = screen.getAllByRole('link');
-    expect(links[0]).toHaveAttribute('href', '/cards/QSM');
+    await userEvent.click(screen.getByText('Economy — Standard'));
+    expect(pushMock).toHaveBeenCalledWith('/cards/QSM');
   });
 
   it('renders column headers', () => {
