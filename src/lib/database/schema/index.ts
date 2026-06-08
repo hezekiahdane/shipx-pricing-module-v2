@@ -31,9 +31,9 @@ export const rates = pgTable(
       .references(() => rateCards.code, { onDelete: 'cascade' }),
     destination: text('destination').notNull(),
     zoneCode: text('zone_code'),
-    weightKg: numeric('weight_kg').notNull(),
+    weightKg: numeric('weight_kg', { precision: 10, scale: 3 }).notNull(),
     unit: text('unit').default('kg'),
-    price: numeric('price'),
+    price: numeric('price', { precision: 15, scale: 4 }),
   },
   (t) => [
     index('idx_rates_lookup').on(t.cardCode, t.destination, t.weightKg),
