@@ -1,23 +1,17 @@
 import { type NextRequest, NextResponse } from 'next/server';
-import createMiddleware from 'next-intl/middleware';
+import createIntlMiddleware from 'next-intl/middleware';
 import { routing } from './src/i18n/routing';
+import { createMiddlewareClient } from './src/lib/auth/clients/middleware';
+import { authGuard } from './src/lib/auth/guard';
 import { buildCspHeader, generateCspNonce } from './src/lib/core/security/csp';
 
-const intlMiddleware = createMiddleware(routing);
+const intlMiddleware = createIntlMiddleware(routing);
 
-export default function middleware(request: NextRequest) {
-  // Maintenance mode — rewrite all traffic to /maintenance.
-  // Use rewrite (not redirect): a redirect lets intlMiddleware re-prefix the path
-  // (/maintenance → /en/maintenance → triggers check again → infinite loop).
-  // Enable: set MAINTENANCE_MODE=true in Vercel env vars, then redeploy.
+export default async function middleware(request: NextRequest) {
   if (process.env.MAINTENANCE_MODE === 'true') {
     return NextResponse.rewrite(new URL('/maintenance', request.url));
   }
 
-  // Both env reads use process.env directly — middleware.ts runs before the
-  // Next.js module graph, so @/lib/core/env (Zod-validated) is not available
-  // here. NODE_ENV is the standard Next.js static analysis exception; reading
-  // NEXT_PUBLIC_VERCEL_ENV directly is intentional and acceptable in middleware.
   const isDev =
     process.env.NODE_ENV === 'development' ||
     process.env.NEXT_PUBLIC_VERCEL_ENV === 'preview';
@@ -55,13 +49,28 @@ export default function middleware(request: NextRequest) {
     }
   }
 
-  const response = intlMiddleware(request);
-  response.headers.set('Content-Security-Policy', csp);
-  response.headers.set('x-nonce', nonce);
-  return response;
+  // Refresh Supabase session so server components can read the current user.
+  const response = NextResponse.next({ request });
+  const supabase = createMiddlewareClient(request, response);
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+
+  // Protect /cards/* — redirect unauthenticated users to /login.
+  const guardResponse = authGuard(request, response, !!session);
+  if (guardResponse !== response) {
+    guardResponse.headers.set('Content-Security-Policy', csp);
+    guardResponse.headers.set('x-nonce', nonce);
+    return guardResponse;
+  }
+
+  // Apply i18n locale routing (locale prefix, default locale redirect).
+  const intlResponse = intlMiddleware(request);
+  intlResponse.headers.set('Content-Security-Policy', csp);
+  intlResponse.headers.set('x-nonce', nonce);
+  return intlResponse;
 }
 
 export const config = {
-  // Match the root and all locale-prefixed paths, excluding Next.js internals and static files
   matcher: ['/((?!api|_next|_vercel|.*\\..*).*)'],
 };

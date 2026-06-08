@@ -81,4 +81,42 @@ describe('authGuard', () => {
     expect(location).toContain('redirect=');
     expect(location).toContain('dashboard');
   });
+
+  // Task 5: /cards route protection
+  it('allows unauthenticated access to /login', () => {
+    const result = authGuard(
+      new NextRequest('http://localhost:3000/en/login'),
+      NextResponse.next(),
+      false,
+    );
+    expect(result.status).toBe(200);
+  });
+
+  it('redirects unauthenticated access to /cards/* routes', () => {
+    const result = authGuard(
+      new NextRequest('http://localhost:3000/en/cards/QSM'),
+      NextResponse.next(),
+      false,
+    );
+    expect(result.status).toBe(307);
+    expect(result.headers.get('location')).toContain('/login');
+  });
+
+  it('allows authenticated access to /cards/* routes', () => {
+    const result = authGuard(
+      new NextRequest('http://localhost:3000/en/cards/QSM'),
+      NextResponse.next(),
+      true,
+    );
+    expect(result.status).toBe(200);
+  });
+
+  it('does not redirect unauthenticated access to /en/ (home guarded by layout)', () => {
+    const result = authGuard(
+      new NextRequest('http://localhost:3000/en/'),
+      NextResponse.next(),
+      false,
+    );
+    expect(result.status).toBe(200);
+  });
 });

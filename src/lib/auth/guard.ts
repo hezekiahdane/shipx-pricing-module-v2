@@ -1,7 +1,7 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 
-const PROTECTED_ROUTES = ['/dashboard', '/settings', '/admin'];
+const PROTECTED_ROUTES = ['/dashboard', '/settings', '/admin', '/cards'];
 
 export function authGuard(
   request: NextRequest,
