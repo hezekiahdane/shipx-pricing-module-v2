@@ -95,7 +95,26 @@ export const transitTimes = pgTable(
   ],
 );
 
+// Terms & Conditions sections for a rate card. One row per numbered section.
+export const rateCardTerms = pgTable(
+  'rate_card_terms',
+  {
+    id: bigserial('id', { mode: 'number' }).primaryKey(),
+    cardCode: text('card_code')
+      .notNull()
+      .references(() => rateCards.code, { onDelete: 'cascade' }),
+    sectionNum: integer('section_num').notNull(),
+    title: text('title').notNull(),
+    body: text('body').notNull(),
+  },
+  (t) => [
+    index('idx_terms_card').on(t.cardCode),
+    unique().on(t.cardCode, t.sectionNum),
+  ],
+);
+
 export type RateCard = typeof rateCards.$inferSelect;
 export type Rate = typeof rates.$inferSelect;
 export type TierThreshold = typeof tierThresholds.$inferSelect;
 export type TransitTime = typeof transitTimes.$inferSelect;
+export type RateCardTerm = typeof rateCardTerms.$inferSelect;

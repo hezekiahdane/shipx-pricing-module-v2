@@ -21,6 +21,7 @@ import { join } from 'path';
 import postgres from 'postgres';
 import {
   rateCards,
+  rateCardTerms,
   rates,
   tierThresholds,
   transitTimes,
@@ -118,6 +119,52 @@ function parseOldCatalog() {
         return m ? `${m[3]}-${m[2]}-${m[1]}` : null;
       })(),
     }));
+}
+
+// ─── Parse a terms CSV file ────────────────────────────────────────────────
+
+type TermEntry = { sectionNum: number; title: string; body: string };
+
+function parseTermsCsv(filePath: string): TermEntry[] {
+  const content = readFileSync(filePath, 'utf-8');
+  const rows = parseCsv(content, {
+    relax_column_count: true,
+    skip_empty_lines: false,
+  }) as string[][];
+
+  const sectionPattern = /^(\d+)\.\s*(.+)/;
+  const entries: TermEntry[] = [];
+  let current: { num: number; title: string; lines: string[] } | null = null;
+
+  for (const row of rows) {
+    const text = row[0]?.trim() ?? '';
+    if (!text || text === 'Terms & Conditions') continue;
+
+    const match = text.match(sectionPattern);
+    if (match) {
+      if (current)
+        entries.push({
+          sectionNum: current.num,
+          title: current.title,
+          body: current.lines.join('\n').trim(),
+        });
+      current = {
+        num: parseInt(match[1], 10),
+        title: match[2].trim(),
+        lines: [],
+      };
+    } else if (current && text) {
+      current.lines.push(text);
+    }
+  }
+  if (current)
+    entries.push({
+      sectionNum: current.num,
+      title: current.title,
+      body: current.lines.join('\n').trim(),
+    });
+
+  return entries;
 }
 
 // ─── Parse a transit times CSV file ───────────────────────────────────────
@@ -459,6 +506,42 @@ async function main() {
       }
       console.log(
         `  ✓ ${upserted} transit time entries upserted for ${matchedCode}`,
+      );
+    }
+  }
+
+  // 7. Seed terms from "* - Terms.csv" files
+  const termsFiles = readdirSync(DOCS_DIR).filter(
+    (f) =>
+      f.toLowerCase().includes('terms') &&
+      f.endsWith('.csv') &&
+      f.toLowerCase().includes(' - terms'),
+  );
+
+  if (termsFiles.length > 0) {
+    console.log('\nSeeding rate_card_terms...');
+    for (const file of termsFiles) {
+      const matchedCode = activeCodes.find((code) =>
+        file.toUpperCase().startsWith(code.toUpperCase()),
+      );
+      if (!matchedCode) {
+        console.log(`  ⚠ ${file}: could not match to a card code — skipping.`);
+        continue;
+      }
+      console.log(`  Processing: ${file} → ${matchedCode}`);
+      const entries = parseTermsCsv(join(DOCS_DIR, file));
+
+      for (const entry of entries) {
+        await db
+          .insert(rateCardTerms)
+          .values({ cardCode: matchedCode, ...entry })
+          .onConflictDoUpdate({
+            target: [rateCardTerms.cardCode, rateCardTerms.sectionNum],
+            set: { title: rateCardTerms.title, body: rateCardTerms.body },
+          });
+      }
+      console.log(
+        `  ✓ ${entries.length} terms sections upserted for ${matchedCode}`,
       );
     }
   }

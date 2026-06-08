@@ -3,11 +3,13 @@ import { getDb } from '@/lib/database';
 import type {
   Rate,
   RateCard,
+  RateCardTerm,
   TierThreshold,
   TransitTime,
 } from '@/lib/database/schema';
 import {
   rateCards,
+  rateCardTerms,
   rates,
   tierThresholds,
   transitTimes,
@@ -128,6 +130,21 @@ export async function getTransitTimes(
     .from(transitTimes)
     .where(eq(transitTimes.cardCode, cardCode))
     .orderBy(asc(transitTimes.countryName));
+}
+
+export async function getTerms(
+  cardCode: string,
+): Promise<Pick<RateCardTerm, 'sectionNum' | 'title' | 'body'>[]> {
+  const db = getDb();
+  return db
+    .select({
+      sectionNum: rateCardTerms.sectionNum,
+      title: rateCardTerms.title,
+      body: rateCardTerms.body,
+    })
+    .from(rateCardTerms)
+    .where(eq(rateCardTerms.cardCode, cardCode))
+    .orderBy(asc(rateCardTerms.sectionNum));
 }
 
 export async function getRateCard(code: string): Promise<RateCard | null> {

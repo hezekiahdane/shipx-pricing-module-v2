@@ -1,8 +1,10 @@
 import { notFound } from 'next/navigation';
 import RatesTable from '@/features/rate-cards/components/RatesTable';
+import TermsSection from '@/features/rate-cards/components/TermsSection';
 import {
   getRateCard,
   getRates,
+  getTerms,
   getTransitTimesByZone,
 } from '@/lib/database/queries/rate-cards';
 
@@ -15,9 +17,10 @@ export default async function CardPage({ params }: Props) {
   const card = await getRateCard(code);
   if (!card) notFound();
 
-  const [rates, transitByZone] = await Promise.all([
+  const [rates, transitByZone, terms] = await Promise.all([
     getRates(code),
     getTransitTimesByZone(code),
+    getTerms(code),
   ]);
 
   return (
@@ -37,6 +40,15 @@ export default async function CardPage({ params }: Props) {
         currency={card.currency ?? 'VND'}
         transitByZone={transitByZone}
       />
+
+      {terms.length > 0 && (
+        <section className="space-y-3 rounded-lg border p-5">
+          <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-500">
+            Terms &amp; Conditions
+          </h2>
+          <TermsSection terms={terms} />
+        </section>
+      )}
     </div>
   );
 }
