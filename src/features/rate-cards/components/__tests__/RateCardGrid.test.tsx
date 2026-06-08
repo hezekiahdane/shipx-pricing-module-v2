@@ -28,7 +28,7 @@ const mockCards: CardSummary[] = [
 ];
 
 describe('RateCardGrid', () => {
-  it('renders a card for each rate card', () => {
+  it('renders a row for each rate card', () => {
     render(<RateCardGrid cards={mockCards} />);
     expect(screen.getByText('Economy Standard')).toBeInTheDocument();
     expect(screen.getByText('Economy Express')).toBeInTheDocument();
@@ -39,21 +39,30 @@ describe('RateCardGrid', () => {
     expect(screen.getByText('QSM')).toBeInTheDocument();
   });
 
-  it('renders the status badge', () => {
+  it('renders status badges', () => {
     render(<RateCardGrid cards={mockCards} />);
     expect(screen.getAllByText('Active')).toHaveLength(2);
   });
 
   it('renders "—" when effectiveDate is null', () => {
     render(<RateCardGrid cards={mockCards} />);
-    expect(screen.getByText(/Effective —/)).toBeInTheDocument();
+    // The null date row should show a dash
+    const dashes = screen.getAllByText('—');
+    expect(dashes.length).toBeGreaterThanOrEqual(1);
   });
 
-  it('renders links to the card detail page', () => {
+  it('renders "View rates" links to the card detail page', () => {
     render(<RateCardGrid cards={mockCards} />);
     const links = screen.getAllByRole('link');
     expect(links[0]).toHaveAttribute('href', '/cards/QSM');
     expect(links[1]).toHaveAttribute('href', '/cards/YUN');
+  });
+
+  it('renders table column headers', () => {
+    render(<RateCardGrid cards={mockCards} />);
+    expect(screen.getByText('Code')).toBeInTheDocument();
+    expect(screen.getByText('Product Name')).toBeInTheDocument();
+    expect(screen.getByText('Status')).toBeInTheDocument();
   });
 
   it('renders empty state when cards array is empty', () => {
