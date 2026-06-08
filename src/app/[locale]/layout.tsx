@@ -7,8 +7,6 @@ import '@/app/globals.css';
 
 import { JsonLd } from '@/components/common/JsonLd';
 import { DevPanelWrapper } from '@/components/dev/DevPanelWrapper';
-import Footer from '@/components/layout/Footer';
-import Navbar from '@/components/layout/Navbar';
 import { devPanelConfig } from '@/config/dev-panel.config';
 import { siteConfig } from '@/lib/core/config/site';
 import { env } from '@/lib/core/env';
@@ -107,16 +105,10 @@ export default async function LocaleLayout({
         <NextIntlClientProvider messages={messages} locale={locale}>
           {isDev ? (
             <DevPanelWrapper config={devPanelConfig}>
-              <Navbar />
-              <main className="flex-1">{children}</main>
-              <Footer />
+              {children}
             </DevPanelWrapper>
           ) : (
-            <>
-              <Navbar />
-              <main className="flex-1">{children}</main>
-              <Footer />
-            </>
+            children
           )}
         </NextIntlClientProvider>
         <Analytics />
