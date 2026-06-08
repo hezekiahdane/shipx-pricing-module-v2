@@ -44,6 +44,7 @@ const TIER_KEY_TO_COLUMN: Record<
 interface RateCardGridProps {
   cards: CardSummary[];
   tiers: TierThreshold[];
+  codesWithRates: Set<string>;
 }
 
 // ─── Section grouping ──────────────────────────────────────────────────────
@@ -135,7 +136,11 @@ const ROW_BG: Record<string, string> = {
 
 // ─── Component ─────────────────────────────────────────────────────────────
 
-export default function RateCardGrid({ cards, tiers }: RateCardGridProps) {
+export default function RateCardGrid({
+  cards,
+  tiers,
+  codesWithRates,
+}: RateCardGridProps) {
   const router = useRouter();
 
   if (cards.length === 0) {
@@ -220,7 +225,14 @@ export default function RateCardGrid({ cards, tiers }: RateCardGridProps) {
                     className={`cursor-pointer transition-colors hover:bg-gray-50 ${rowBg}`}
                   >
                     <td className="px-3 py-2.5 font-mono text-xs font-medium text-gray-500">
-                      {c.code}
+                      <div className="flex flex-col gap-0.5">
+                        {c.code}
+                        {!codesWithRates.has(c.code) && (
+                          <span className="inline-block w-fit rounded bg-gray-100 px-1 py-0.5 text-[10px] font-normal text-gray-400">
+                            no rates
+                          </span>
+                        )}
+                      </div>
                     </td>
                     <td className="px-3 py-2.5 font-medium text-gray-900">
                       {fmtName(c.productName)}

@@ -81,24 +81,48 @@ const mockCards: CardSummary[] = [
 
 describe('RateCardGrid', () => {
   it('renders a row for each card', () => {
-    render(<RateCardGrid cards={mockCards} tiers={mockTiers} />);
+    render(
+      <RateCardGrid
+        cards={mockCards}
+        tiers={mockTiers}
+        codesWithRates={new Set(['QSM', 'YES', 'DLV'])}
+      />,
+    );
     expect(screen.getByText('Economy — Standard')).toBeInTheDocument();
     expect(screen.getByText('Economy — YUN Standard')).toBeInTheDocument();
     expect(screen.getByText('Express — DHL Premium (VN)')).toBeInTheDocument();
   });
 
   it('renders the code', () => {
-    render(<RateCardGrid cards={mockCards} tiers={mockTiers} />);
+    render(
+      <RateCardGrid
+        cards={mockCards}
+        tiers={mockTiers}
+        codesWithRates={new Set(['QSM', 'YES', 'DLV'])}
+      />,
+    );
     expect(screen.getByText('QSM')).toBeInTheDocument();
   });
 
   it('renders tier discount values as percentages', () => {
-    render(<RateCardGrid cards={mockCards} tiers={mockTiers} />);
+    render(
+      <RateCardGrid
+        cards={mockCards}
+        tiers={mockTiers}
+        codesWithRates={new Set(['QSM', 'YES', 'DLV'])}
+      />,
+    );
     expect(screen.getAllByText('1.5%').length).toBeGreaterThanOrEqual(1);
   });
 
   it('renders threshold values in a dedicated row above the sections', () => {
-    render(<RateCardGrid cards={mockCards} tiers={mockTiers} />);
+    render(
+      <RateCardGrid
+        cards={mockCards}
+        tiers={mockTiers}
+        codesWithRates={new Set(['QSM', 'YES', 'DLV'])}
+      />,
+    );
     // Derived from VND values, displayed in the threshold row in tbody
     expect(screen.getByText('< 20M')).toBeInTheDocument();
     expect(screen.getByText('≥ 20M')).toBeInTheDocument();
@@ -106,24 +130,48 @@ describe('RateCardGrid', () => {
   });
 
   it('renders section header rows for Economy groups', () => {
-    render(<RateCardGrid cards={mockCards} tiers={mockTiers} />);
+    render(
+      <RateCardGrid
+        cards={mockCards}
+        tiers={mockTiers}
+        codesWithRates={new Set(['QSM', 'YES', 'DLV'])}
+      />,
+    );
     expect(screen.getByText('ECONOMY — POSTAL')).toBeInTheDocument();
     expect(screen.getByText('ECONOMY — YUN (EXPERIMENT)')).toBeInTheDocument();
   });
 
   it('renders section header for Express DHL', () => {
-    render(<RateCardGrid cards={mockCards} tiers={mockTiers} />);
+    render(
+      <RateCardGrid
+        cards={mockCards}
+        tiers={mockTiers}
+        codesWithRates={new Set(['QSM', 'YES', 'DLV'])}
+      />,
+    );
     expect(screen.getByText('EXPRESS — DHL')).toBeInTheDocument();
   });
 
   it('navigates to the detail page when a row is clicked', async () => {
-    render(<RateCardGrid cards={mockCards} tiers={mockTiers} />);
+    render(
+      <RateCardGrid
+        cards={mockCards}
+        tiers={mockTiers}
+        codesWithRates={new Set(['QSM', 'YES', 'DLV'])}
+      />,
+    );
     await userEvent.click(screen.getByText('Economy — Standard'));
     expect(pushMock).toHaveBeenCalledWith('/admin/cards/QSM');
   });
 
   it('renders column headers from tiers prop', () => {
-    render(<RateCardGrid cards={mockCards} tiers={mockTiers} />);
+    render(
+      <RateCardGrid
+        cards={mockCards}
+        tiers={mockTiers}
+        codesWithRates={new Set(['QSM', 'YES', 'DLV'])}
+      />,
+    );
     expect(screen.getByText('Code')).toBeInTheDocument();
     expect(screen.getByText('Product Name')).toBeInTheDocument();
     expect(screen.getByText('Public')).toBeInTheDocument();
@@ -132,7 +180,9 @@ describe('RateCardGrid', () => {
   });
 
   it('renders empty state when cards array is empty', () => {
-    render(<RateCardGrid cards={[]} tiers={mockTiers} />);
+    render(
+      <RateCardGrid cards={[]} tiers={mockTiers} codesWithRates={new Set()} />,
+    );
     expect(screen.getByText(/No rate cards/i)).toBeInTheDocument();
   });
 });

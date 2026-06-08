@@ -1,0 +1,216 @@
+Country/Territory,Zone,Country Code,"Transit time
+(working days)"
+Afghanistan,H2,AF,7-12
+Albania,I,AL,7-12
+Algeria,I,DZ,7-12
+American Samoa,H1,AS,7-12
+Andorra,F,AD,6-10
+Angola,I,AO,7-12
+Anguilla,H1,AI,7-12
+Antigua & Barbuda,H1,AG,7-12
+Argentina,H1,AR,7-12
+Armenia,I,AM,7-12
+Aruba,H1,AW,7-12
+Australia,U,AU,5-8
+Austria,F,AT,6-10
+Azerbaijan,I,AZ,7-12
+Bahama,H1,BS,7-12
+Bahrain,G,BH,7-12
+Bangladesh,G,BD,7-12
+Barbados,H1,BB,7-12
+Belarus,I,BY,7-12
+Belgium,M,BE,6-10
+Belize,H1,BZ,7-12
+Benin,I,BJ,7-12
+Bermuda,H1,BM,7-12
+Bhutan,G,BT,7-12
+Bolivia,H1,BO,7-12
+Bonaire,H1,BQ,7-12
+Bosnia-Herzegovina,I,BA,7-12
+Botswana,I,BW,7-12
+Brazil,H1,BR,7-12
+British Virgin Islands,H1,VG,7-12
+Brunei,C,BN,5-7
+Bulgaria,F,BG,6-10
+Burkina Faso,I,BF,7-12
+Burundi,I,BI,7-12
+Cambodia,C,KH,5-7
+Cameroon,I,CM,7-12
+Canada,E,CA,6-10
+Cape Verde,I,CV,7-12
+Cayman Islands,H1,KY,7-12
+Chad,I,TD,7-12
+Chile,H1,CL,7-12
+China (Excluding China South),W,CN,5-8
+China (South),K,CN,5-8
+Fujian 350000-369999,K,CN,5-7
+Guangdong  510000-529999,K,CN,5-8
+Colombia,H1,CO,7-12
+Congo,I,CG,7-12
+Cook Islands,H1,CK,7-12
+Costa Rica,H1,CR,7-12
+Croatia,F,HR,6-10
+Curacao,H1,CW,7-12
+Cyprus,F,CY,6-10
+Czech Republic,F,CZ,6-10
+Côte D'ivoire (Ivory Coast),I,CI,7-12
+Democratic Republic of the Congo,I,CG,7-12
+Denmark,F,DK,6-10
+Djibouti,I,DJ,7-12
+Dominica,H1,DM,7-12
+Dominican Republic,H1,DO,7-12
+East Timor,H1,TL,7-12
+Ecuador,H1,EC,7-12
+Egypt,G,EG,7-12
+El Salvador,H1,SV,7-12
+Eritrea,I,ER,7-12
+Estonia,F,EE,6-10
+Ethiopia,I,ET,7-12
+Faeroe Islands,F,FO,6-10
+Fiji,H1,FJ,7-12
+Finland,F,FI,6-10
+France,M,FR,6-10
+French Guiana,H1,GF,7-12
+French Polynesia,H1,PF,7-12
+Gabon,I,GA,7-12
+Gambia,I,GM,7-12
+Georgia,I,GE,7-12
+Germany,M,DE,6-10
+Ghana,I,GH,7-12
+Gibraltar,I,GI,7-12
+Greece,F,GR,6-10
+Greenland,F,GL,6-10
+Grenada,H1,GD,7-12
+Guadeloupe,H1,GP,7-12
+Guam,H1,GU,7-12
+Guatemala,H1,GT,7-12
+Guinea,I,GN,7-12
+Guyana,H1,GY,7-12
+Haiti,H1,HT,7-12
+Honduras,H1,HN,7-12
+"Hong Kong SAR, China",V,HK,5-8
+Hungary,F,HU,6-10
+Iceland,F,IS,6-10
+India,O,IN,5-8
+Indonesia,T,ID,5-8
+Iraq,H2,IQ,7-12
+Ireland,F,IE,6-10
+Israel,F,IL,6-10
+Italy,M,IT,6-10
+Jamaica,H1,JM,7-12
+Japan,P,JP,5-8
+Jordan,H2,JO,7-12
+Kazakhstan,I,KZ,7-12
+Kenya,I,KE,7-12
+Kuwait,G,KW,7-12
+Kyrgyzstan,I,KG,7-12
+Laos,C,LA,5-7
+Latvia,F,LV,6-10
+Lebanon,H2,LB,7-12
+Lesotho,I,LS,7-12
+Liberia,I,LR,7-12
+Libya,I,LY,7-12
+Liechtenstein,F,LI,6-10
+Lithuania,F,LT,6-10
+Luxembourg,F,LU,6-10
+"Macau SAR, China",B,MO,5-8
+Macedonia,I,MK,7-12
+Madagascar,I,MG,7-12
+Malawi,I,MW,7-12
+Malaysia,Q,MY,5-8
+Maldives,G,MV,7-12
+Mali,I,ML,7-12
+Malta,F,MT,6-10
+Marshall Islands,H1,MH,7-12
+Martinique,H1,MQ,7-12
+Mauritania,I,MR,7-12
+Mauritius,I,MU,7-12
+Mexico,E,MX,6-10
+Micronesia,H1,FM,7-12
+Monaco,F,MC,6-10
+Mongolia,C,MN,6-10
+Monserrat,H1,MS,7-12
+Montenegro,I,ME,7-12
+Morocco,I,MA,7-12
+Mozambique,I,MZ,7-12
+Namibia,I,NA,7-12
+Nepal,G,NP,7-12
+Netherlands,M,NL,6-10
+Netherlands Antilles,H1,AN,7-12
+New Caledonia,H1,NC,7-12
+New Zealand,U,NZ,5-8
+Nicaragua,H1,NI,7-12
+Niger,I,NE,7-12
+Nigeria,I,NG,7-12
+Northern Mariana Islands,H1,MP,7-12
+Norway,F,NO,6-10
+Oman,G,OM,7-12
+Pakistan,G,PK,7-12
+Palau,H1,PW,7-12
+Palestine Autonomous,H1,PS,7-12
+Panama,H1,PA,7-12
+Papua New Guinea,H1,PG,7-12
+Paraguay,H1,PY,7-12
+Peru,H1,PE,7-12
+Phillipines,S,PH,5-8
+Poland,F,PL,6-10
+Portugal,F,PT,6-10
+Puerto Rico,E,PR,7-12
+Qatar,G,QA,7-12
+Republic of Moldova,I,MD,7-12
+Romania,F,RO,6-10
+Russian Federation,F,RU,7-12
+Rwanda,I,RW,7-12
+Réunion,I,RE,7-12
+Saint Lucia,H1,LC,7-12
+Samoa,H1,WS,7-12
+Saudi Arabia,G,SA,7-12
+Senegal,I,SN,7-12
+Serbia,F,RS,6-10
+Seychelles,I,SC,7-12
+Slovakia,F,SK,6-10
+Slovenia,F,SI,6-10
+South Africa,G,ZA,7-12
+South Korea,Z,KR,5-8
+Spain,M,ES,6-10
+Sri Lanka,G,LK,7-12
+St. Kitts and Nevis,H1,KN,7-12
+St. Maarten,H1,SX,7-12
+St. Martin,H1,MF,7-12
+St. Vincent & the Grenadines,H1,VC,7-12
+Suriname,H1,SR,7-12
+Swaziland,I,SZ,7-12
+Sweden,F,SE,6-10
+Switzerland,F,CH,6-10
+Syrian Arab Republic,H1,SY,7-12
+Taiwan,X,TW,5-8
+Thailand,R,TH,5-8
+Togo,I,TG,7-12
+Tonga,H1,TO,7-12
+Trinidad & Tobago,H1,TT,7-12
+Tunisia,I,TN,7-12
+Turkey,F,TR,6-10
+Turks & Caicos Islands,H1,TC,7-12
+Colorado 80000-81699,D,US,5-7
+Idaho 83200-83999,D,US,5-7
+Utah 84000-84799,D,US,5-7
+Arizona 85000-86599,D,US,5-7
+Nevada 89000-89899,D,US,5-7
+California 90000-96699,D,US,5-7
+Oregon 97000-97999,D,US,5-7
+Washington 98000-99499,D,US,5-7
+U.S. Virgin Islands,H1,US,7-12
+U.S. (Rest of Country),E,US,5-7
+Uganda,I,UG,7-12
+Ukraine,F,UA,6-10
+United Arab Emirates,G,AE,7-12
+United Kingdom (Great Britain),M,GB,6-10
+United Republic of Tanzania,I,TZ,7-12
+Uruguay,H1,UY,7-12
+Uzbekistan,I,UZ,7-12
+Vanuatu,H1,VU,7-12
+Venezuela,H1,VE,7-12
+Wallis & Futuna,H1,WF,7-12
+Yemen,H1,YE,7-12
+Zambia,I,ZM,7-12
+Zimbabwe,I,ZW,7-12

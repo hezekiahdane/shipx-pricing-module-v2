@@ -1,0 +1,235 @@
+Zone,
+Countries & Territories,Zone
+Afghanistan (AF),7
+Albania (AL),7
+Algeria (DZ),8
+American Samoa (AS),8
+Andorra (AD),6
+Angola (AO),8
+Anguilla (AI),8
+Antigua (AG),8
+Argentina (AR),12
+Armenia (AM),8
+Aruba (AW),8
+Australia (AU),13
+Austria (AT),6
+Azerbaijan (AZ),8
+Bahamas (BS),8
+Bahrain (BH),7
+Bangladesh (BD),4
+Barbados (BB),8
+Belarus (BY),8
+Belgium (BE),14
+Belize (BZ),12
+Benin (BJ),8
+Bermuda (BM),8
+Bhutan (BT),4
+Bolivia (BO),12
+Bonaire (XB),8
+Bosnia & Herzegovina(BA),7
+Botswana (BW),8
+Brazil (BR),12
+Brunei (BN),2
+Bulgaria (BG),6
+Burkina Faso (BF),8
+Burundi (BI),8
+Cambodia (KH),4
+Cameroon (CM),8
+Canada (CA),10
+"Canary Islands, The (IC)",7
+Cape Verde (CV),8
+Cayman Islands (KY),8
+Central African Rep(CF),8
+Chad (TD),8
+Chile (CL),12
+China (CN),11
+Colombia (CO),12
+Comoros (KM),8
+Congo (CG),8
+"Congo, DPR (CD)",8
+Cook Islands (CK),8
+Costa Rica (CR),12
+Cote D Ivoire (CI),8
+Croatia (HR),6
+Cuba (CU),8
+Curacao (XC),8
+Cyprus (CY),6
+"Czech Rep., The (CZ)",14
+Denmark (DK),14
+Djibouti (DJ),8
+Dominica (DM),8
+Dominican Rep. (DO),8
+Ecuador (EC),12
+Egypt (EG),7
+El Salvador (SV),12
+Eritrea (ER),8
+Estonia (EE),6
+Eswatini (SZ),8
+Ethiopia (ET),8
+Falkland Islands (FK),8
+Faroe Islands (FO),8
+Fiji (FJ),8
+Finland (FI),6
+France (FR),14
+French Guyana (GF),8
+Gabon (GA),8
+Gambia (GM),8
+Georgia (GE),6
+Germany (DE),14
+Ghana (GH),8
+Gibraltar (GI),7
+Greece (GR),6
+Greenland (GL),8
+Grenada (GD),8
+Guadeloupe (GP),8
+Guam (GU),8
+Guatemala (GT),12
+Guernsey (GG),7
+Guinea Rep. (GN),8
+Guinea-Bissau (GW),8
+Guinea-Equatorial (GQ),8
+Guyana (British) (GY),8
+Haiti (HT),8
+Honduras (HN),12
+Hong Kong SAR China (HK),2
+Hungary (HU),6
+Iceland (IS),6
+India (IN),3
+Indonesia (ID),2
+Iran (IR),7
+Iraq (IQ),8
+"Ireland, Rep. Of (IE)",6
+Israel (IL),7
+Italy (IT),14
+Jamaica (JM),8
+Japan (JP),11
+Jersey (JE),7
+Jordan (JO),7
+Kazakhstan (KZ),8
+Kenya (KE),8
+Kiribati (KI),8
+"Korea, Rep. Of (KR)",2
+"Korea,  D.P.R Of (KP)",7
+Kosovo (KV),7
+Kuwait (KW),7
+Kyrgyzstan (KG),8
+Laos (LA),4
+Latvia (LV),6
+Lebanon (LB),7
+Lesotho (LS),8
+Liberia (LR),8
+Libya (LY),7
+Liechtenstein (LI),6
+Lithuania (LT),6
+Luxembourg (LU),6
+Macau SAR China (MO),2
+Madagascar (MG),8
+Malawi (MW),8
+Malaysia (MY),1
+Maldives (MV),4
+Mali (ML),8
+Malta (MT),6
+Marshall Islands (MH),8
+Martinique (MQ),8
+Mauritania (MR),8
+Mauritius (MU),8
+Mayotte (YT),8
+Mexico (MX),10
+Micronesia (FM),8
+"Moldova, Rep. Of (MD)",8
+Monaco (MC),6
+Mongolia (MN),8
+"Montenegro, Rep Of (ME)",6
+Montserrat (MS),8
+Morocco (MA),8
+Mozambique (MZ),8
+Myanmar (MM),4
+Namibia (NA),8
+"Nauru, Rep. Of (NR)",8
+Nepal (NP),4
+"Netherlands, The (NL)",14
+Nevis (XN),8
+New Caledonia (NC),8
+New Zealand (NZ),9
+Nicaragua (NI),12
+Niger (NE),8
+Nigeria (NG),8
+Niue (NU),8
+North Macedonia (MK),7
+Northern Mariana Islands (MP),8
+Norway (NO),6
+Oman (OM),7
+Pakistan (PK),4
+Palau (PW),8
+Panama (PA),12
+Papua New Guinea (PG),8
+Paraguay (PY),12
+Peru (PE),12
+"Philippines, The (PH)",2
+Poland (PL),6
+Portugal (PT),6
+Puerto Rico (PR),8
+Qatar (QA),7
+"Reunion, Island Of (RE)",8
+Romania (RO),6
+Russian Federation (RU),7
+Rwanda (RW),8
+Saint Helena (SH),8
+Samoa (WS),8
+San Marino (SM),6
+Sao Tome And Principe (ST),8
+Saudi Arabia (SA),7
+Senegal (SN),8
+"Serbia, Rep. Of (RS)",6
+Seychelles (SC),8
+Sierra Leone (SL),8
+Slovakia (SK),6
+Slovenia (SI),6
+Solomon Islands (SB),8
+Somalia Hargeisa (XS),8
+Somalia Mogadishu (SO),8
+South Africa (ZA),7
+South Sudan (SS),8
+Spain (ES),14
+Sri Lanka (LK),4
+St. Barthelemy (XY),8
+St. Eustatius (XE),8
+St. Kitts (KN),8
+St. Lucia (LC),8
+St. Maarten (XM),8
+St. Vincent (VC),8
+Sudan (SD),8
+Suriname (SR),8
+Sweden (SE),14
+Switzerland (CH),14
+Syria (SY),7
+Tahiti (PF),8
+Taiwan (TW),2
+Tajikistan (TJ),8
+Tanzania (TZ),8
+Thailand (TH),2
+Timor-Leste (TL),8
+Togo (TG),8
+Tonga (TO),8
+Trinidad And Tobago (TT),8
+Tunisia (TN),8
+Turkey (TR),6
+Turkmenistan (TM),8
+Turks & Caicos (TC),8
+Tuvalu (TV),8
+USA (US),5
+Uganda (UG),8
+Ukraine (UA),8
+United Arab Emirates (AE),7
+United Kingdom (GB),14
+Uruguay (UY),12
+Uzbekistan (UZ),8
+Vanuatu (VU),8
+Vatican City (VA),6
+Venezuela (VE),12
+Vietnam (VN),2
+Virgin Islands-British (VG),8
+Virgin Islands-US (VI),8
+"Yemen, Rep. Of (YE)",7
+Zambia (ZM),8
+Zimbabwe (ZW),8

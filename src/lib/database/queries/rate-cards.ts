@@ -52,6 +52,14 @@ export async function listRateCards(): Promise<
     .orderBy(sql`${rateCards.category} NULLS LAST`, asc(rateCards.code));
 }
 
+export async function listCardCodesWithRates(): Promise<Set<string>> {
+  const db = getDb();
+  const rows = await db
+    .selectDistinct({ cardCode: rates.cardCode })
+    .from(rates);
+  return new Set(rows.map((r) => r.cardCode));
+}
+
 export async function listTierThresholds(): Promise<TierThreshold[]> {
   const db = getDb();
   return db
@@ -61,10 +69,13 @@ export async function listTierThresholds(): Promise<TierThreshold[]> {
 }
 
 /**
- * Returns transit time info keyed by zone_code.
- * Zone codes in transit_times can be short codes (C, S1, ROW) or destination
- * names (USA, Germany) — both appear as keys in the returned record so
- * RatesTable can look up by either rates.zoneCode or rates.destination.
+ * Returns transit time info keyed by every available identifier so the
+ * RatesTable lookup (first tries rates.zoneCode, then rates.destination)
+ * works regardless of how a carrier stores transit data.
+ *
+ * Keys populated per row: zoneCode, countryCode, countryName — whichever
+ * are non-null. For QSM-style data these are short zone codes (C, S1, ROW);
+ * for AME-style they are ISO country codes and full country names.
  */
 export async function getTransitTimesByZone(
   cardCode: string,
@@ -73,6 +84,8 @@ export async function getTransitTimesByZone(
   const rows = await db
     .select({
       zoneCode: transitTimes.zoneCode,
+      countryCode: transitTimes.countryCode,
+      countryName: transitTimes.countryName,
       transitTimeMin: transitTimes.transitTimeMin,
       transitTimeMax: transitTimes.transitTimeMax,
     })
@@ -80,29 +93,36 @@ export async function getTransitTimesByZone(
     .where(eq(transitTimes.cardCode, cardCode));
 
   const result: Record<string, { min: number | null; max: number | null }> = {};
-  for (const row of rows) {
-    if (!row.zoneCode) continue;
-    const prev = result[row.zoneCode];
+
+  function addEntry(
+    key: string | null | undefined,
+    min: number | null,
+    max: number | null,
+  ) {
+    if (!key) return;
+    const prev = result[key];
     if (!prev) {
-      result[row.zoneCode] = {
-        min: row.transitTimeMin,
-        max: row.transitTimeMax,
-      };
+      result[key] = { min, max };
     } else {
-      result[row.zoneCode] = {
+      result[key] = {
         min:
-          row.transitTimeMin !== null &&
-          (prev.min === null || row.transitTimeMin < prev.min)
-            ? row.transitTimeMin
+          min !== null && (prev.min === null || min < prev.min)
+            ? min
             : prev.min,
         max:
-          row.transitTimeMax !== null &&
-          (prev.max === null || row.transitTimeMax > prev.max)
-            ? row.transitTimeMax
+          max !== null && (prev.max === null || max > prev.max)
+            ? max
             : prev.max,
       };
     }
   }
+
+  for (const row of rows) {
+    addEntry(row.zoneCode, row.transitTimeMin, row.transitTimeMax);
+    addEntry(row.countryCode, row.transitTimeMin, row.transitTimeMax);
+    addEntry(row.countryName, row.transitTimeMin, row.transitTimeMax);
+  }
+
   return result;
 }
 
