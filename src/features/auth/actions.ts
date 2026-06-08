@@ -7,7 +7,7 @@ export async function signIn(_prev: unknown, formData: FormData) {
     await authSignIn('credentials', {
       email: formData.get('email') as string,
       password: formData.get('password') as string,
-      redirectTo: '/',
+      redirectTo: '/admin',
     });
   } catch (error) {
     if (error instanceof AuthError) {

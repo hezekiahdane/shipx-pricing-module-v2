@@ -3,7 +3,7 @@ import { auth } from '@/auth';
 import Footer from '@/components/layout/Footer';
 import Navbar from '@/components/layout/Navbar';
 
-export default async function AppLayout({
+export default async function AdminLayout({
   children,
 }: {
   children: React.ReactNode;

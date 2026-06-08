@@ -7,12 +7,11 @@ function makeRequest(pathname: string): NextRequest {
 }
 
 describe('authGuard', () => {
-  it('redirects unauthenticated access to / (all non-public routes are protected)', () => {
+  it('allows unauthenticated access to / (public landing page)', () => {
     const req = makeRequest('/en');
     const res = NextResponse.next();
     const result = authGuard(req, res, false);
-    expect(result.status).toBe(307);
-    expect(result.headers.get('location')).toContain('/login');
+    expect(result.status).toBe(200);
   });
 
   it('redirects to login for protected route without session', () => {
@@ -83,7 +82,7 @@ describe('authGuard', () => {
     expect(location).toContain('dashboard');
   });
 
-  // Task 5: /cards route protection
+  // /login and landing page are public
   it('allows unauthenticated access to /login', () => {
     const result = authGuard(
       new NextRequest('http://localhost:3000/en/login'),
@@ -93,32 +92,42 @@ describe('authGuard', () => {
     expect(result.status).toBe(200);
   });
 
-  it('redirects unauthenticated access to /cards/* routes', () => {
-    const result = authGuard(
-      new NextRequest('http://localhost:3000/en/cards/QSM'),
-      NextResponse.next(),
-      false,
-    );
-    expect(result.status).toBe(307);
-    expect(result.headers.get('location')).toContain('/login');
-  });
-
-  it('allows authenticated access to /cards/* routes', () => {
-    const result = authGuard(
-      new NextRequest('http://localhost:3000/en/cards/QSM'),
-      NextResponse.next(),
-      true,
-    );
-    expect(result.status).toBe(200);
-  });
-
-  it('redirects unauthenticated access to /en/ (home is protected by middleware)', () => {
+  it('allows unauthenticated access to the public landing page (/)', () => {
     const result = authGuard(
       new NextRequest('http://localhost:3000/en/'),
       NextResponse.next(),
       false,
     );
+    expect(result.status).toBe(200);
+  });
+
+  // /admin routes are protected
+  it('redirects unauthenticated access to /admin', () => {
+    const result = authGuard(
+      new NextRequest('http://localhost:3000/en/admin'),
+      NextResponse.next(),
+      false,
+    );
     expect(result.status).toBe(307);
     expect(result.headers.get('location')).toContain('/login');
+  });
+
+  it('redirects unauthenticated access to /admin/cards/*', () => {
+    const result = authGuard(
+      new NextRequest('http://localhost:3000/en/admin/cards/QSM'),
+      NextResponse.next(),
+      false,
+    );
+    expect(result.status).toBe(307);
+    expect(result.headers.get('location')).toContain('/login');
+  });
+
+  it('allows authenticated access to /admin routes', () => {
+    const result = authGuard(
+      new NextRequest('http://localhost:3000/en/admin/cards/QSM'),
+      NextResponse.next(),
+      true,
+    );
+    expect(result.status).toBe(200);
   });
 });

@@ -98,7 +98,7 @@ describe('RateCardGrid', () => {
   it('navigates to the detail page when a row is clicked', async () => {
     render(<RateCardGrid cards={mockCards} />);
     await userEvent.click(screen.getByText('Economy — Standard'));
-    expect(pushMock).toHaveBeenCalledWith('/cards/QSM');
+    expect(pushMock).toHaveBeenCalledWith('/admin/cards/QSM');
   });
 
   it('renders column headers', () => {

@@ -13,7 +13,10 @@ export default function Navbar() {
         >
           {siteConfig.name}
         </Link>
-        <Link href="/" className="text-sm text-gray-500 hover:text-gray-900">
+        <Link
+          href="/admin"
+          className="text-sm text-gray-500 hover:text-gray-900"
+        >
           Rate Cards
         </Link>
       </div>

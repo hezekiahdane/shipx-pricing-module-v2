@@ -26,7 +26,7 @@ describe('signIn', () => {
     expect(mockAuthSignIn).toHaveBeenCalledWith('credentials', {
       email: 'user@example.com',
       password: 'secret',
-      redirectTo: '/',
+      redirectTo: '/admin',
     });
   });
 

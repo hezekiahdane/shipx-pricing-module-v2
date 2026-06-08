@@ -188,7 +188,7 @@ export default function RateCardGrid({ cards }: RateCardGridProps) {
                 return (
                   <tr
                     key={c.code}
-                    onClick={() => router.push(`/cards/${c.code}`)}
+                    onClick={() => router.push(`/admin/cards/${c.code}`)}
                     className={`cursor-pointer transition-colors hover:bg-gray-50 ${rowBg}`}
                   >
                     <td className="px-3 py-2.5 font-mono text-xs font-medium text-gray-500">

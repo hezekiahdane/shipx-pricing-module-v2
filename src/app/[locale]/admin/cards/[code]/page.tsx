@@ -13,7 +13,7 @@ export default async function CardPage({ params }: Props) {
   const rates = await getRates(code);
 
   return (
-    <div className="space-y-6">
+    <div className="mx-auto max-w-6xl space-y-6">
       <header className="space-y-1">
         <h1 className="text-2xl font-semibold">{card.productName}</h1>
         <p className="text-sm text-gray-500">
