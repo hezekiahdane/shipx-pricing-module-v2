@@ -101,6 +101,7 @@ describe('RateCardGrid', () => {
     expect(screen.getByText('Code')).toBeInTheDocument();
     expect(screen.getByText('Product Name')).toBeInTheDocument();
     expect(screen.getByText('Status')).toBeInTheDocument();
+    expect(screen.getByText('Public')).toBeInTheDocument();
     expect(screen.getByText('T1')).toBeInTheDocument();
     // PT appears in the header and in every data row
     expect(screen.getAllByText('PT').length).toBeGreaterThanOrEqual(1);

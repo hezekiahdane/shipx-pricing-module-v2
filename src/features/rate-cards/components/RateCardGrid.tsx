@@ -25,6 +25,7 @@ interface RateCardGridProps {
 const TIERS: {
   key: keyof Pick<
     CardSummary,
+    | 'discountPublic'
     | 'discountTier1'
     | 'discountTier2'
     | 'discountTier3'
@@ -34,6 +35,7 @@ const TIERS: {
   label: string;
   sub: string;
 }[] = [
+  { key: 'discountPublic', label: 'Public', sub: '< 20M' },
   { key: 'discountTier1', label: 'T1', sub: '≥ 20M' },
   { key: 'discountTier2', label: 'T2', sub: '≥ 30M' },
   { key: 'discountTier3', label: 'T3', sub: '≥ 40M' },
