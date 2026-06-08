@@ -1,7 +1,7 @@
 import { type NextRequest, NextResponse } from 'next/server';
+import { getToken } from 'next-auth/jwt';
 import createIntlMiddleware from 'next-intl/middleware';
 import { routing } from './src/i18n/routing';
-import { createMiddlewareClient } from './src/lib/auth/clients/middleware';
 import { authGuard } from './src/lib/auth/guard';
 import { buildCspHeader, generateCspNonce } from './src/lib/core/security/csp';
 
@@ -49,22 +49,22 @@ export default async function middleware(request: NextRequest) {
     }
   }
 
-  // Refresh Supabase session so server components can read the current user.
-  const response = NextResponse.next({ request });
-  const supabase = createMiddlewareClient(request, response);
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
+  // Check NextAuth JWT token to determine authentication status.
+  const token = await getToken({
+    req: request,
+    secret: process.env.AUTH_SECRET,
+  });
 
-  // Protect /cards/* — redirect unauthenticated users to /login.
-  const guardResponse = authGuard(request, response, !!session);
+  // Protect app routes — redirect unauthenticated users to /login.
+  const response = NextResponse.next({ request });
+  const guardResponse = authGuard(request, response, !!token);
   if (guardResponse !== response) {
     guardResponse.headers.set('Content-Security-Policy', csp);
     guardResponse.headers.set('x-nonce', nonce);
     return guardResponse;
   }
 
-  // Apply i18n locale routing (locale prefix, default locale redirect).
+  // Apply i18n locale routing.
   const intlResponse = intlMiddleware(request);
   intlResponse.headers.set('Content-Security-Policy', csp);
   intlResponse.headers.set('x-nonce', nonce);

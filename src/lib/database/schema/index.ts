@@ -9,6 +9,18 @@ import {
   unique,
 } from 'drizzle-orm/pg-core';
 
+export const users = pgTable('users', {
+  id: bigserial('id', { mode: 'number' }).primaryKey(),
+  email: text('email').notNull().unique(),
+  passwordHash: text('password_hash').notNull(),
+  name: text('name'),
+  createdAt: timestamp('created_at', { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+});
+
+export type User = typeof users.$inferSelect;
+
 export const rateCards = pgTable('rate_cards', {
   code: text('code').primaryKey(),
   productName: text('product_name').notNull(),

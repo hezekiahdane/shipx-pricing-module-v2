@@ -1,6 +1,19 @@
 import { render, screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+// Mock the server action so LoginForm doesn't pull in next-auth at the module level
+vi.mock('../actions', () => ({
+  signIn: vi.fn(),
+}));
+
+// Mock @/auth to prevent the database/next-auth module chain from loading in tests
+vi.mock('@/auth', () => ({
+  auth: vi.fn(),
+  signIn: vi.fn(),
+  signOut: vi.fn(),
+  handlers: { GET: vi.fn(), POST: vi.fn() },
+}));
+
 // vi.hoisted ensures the mock fn is available before the hoisted vi.mock factory runs
 const { mockUseActionState } = vi.hoisted(() => ({
   mockUseActionState: vi.fn(),

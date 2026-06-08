@@ -1,19 +1,14 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
-import { signOut } from '@/features/auth/actions';
-import { createClient } from '@/lib/auth/clients/server';
+import { auth, signOut } from '@/auth';
 
 export default async function AppLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) redirect('/login');
+  const session = await auth();
+  if (!session) redirect('/login');
 
   return (
     <div>
@@ -21,7 +16,12 @@ export default async function AppLayout({
         <Link href="/" className="font-semibold tracking-tight">
           Rate Cards
         </Link>
-        <form action={signOut}>
+        <form
+          action={async () => {
+            'use server';
+            await signOut({ redirectTo: '/login' });
+          }}
+        >
           <button
             type="submit"
             className="text-sm text-gray-500 hover:text-gray-900"
