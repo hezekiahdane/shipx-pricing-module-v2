@@ -1,0 +1,28 @@
+Code,Product Name,Category,Status,Rate Card
+ECONOMY POSTAL ,,,,
+QSM,Economy Standard,Economy,Active,Rate Card-Economy Standard-QSM-01.04.2026.xlsx
+AME,Economy Belgium Post,Economy,Active,Rate Card-Economy Belgium Post-AME-12.01.2026.xlsx
+ECONOMY YUN (EXPERIMENT)  ,,,,
+YES,Economy YUN Standard,Economy,Experiment,Rate Card-YUN Standard-YES-02.03.2026.xlsx
+YEC,Economy YUN Cosmetics,Economy,Experiment,Rate Card-YUN Comestics-YEC-02.03.2026.xlsx
+YFU,Economy YUN US Fast,Economy,Experiment,Rate Card-YUN US Fast Line-YFU-02.03.2026.xlsx
+DIRECT US ,,,,
+CM-01,Direct US B2C,Direct US,Active,Rate Card-Direct US-CM01-01.06.2026.xlsx
+CM-02,Direct US B2B2C,Direct US,Active,Rate Card-Direct US-CM02-02.02.2026.xlsx
+LM-01,Last Mile USPS (US dom.),Direct US,Pre-launch,Rate Card-Last Mile USPS-LM01-01.04.2026.xlsx
+COMMERCIAL,,,,
+SPL,Commercial Special Line,Commercial,Active,Rate Card-Commercial-USA Special Line-01.06.2026.xlsx
+EXPRESS DHL ,,,,
+DLV,Express DHL Premium (VN),Express,Active,Rate Card-DHL Premium (VN)-DLV-27.05.2026.xlsx
+DSG,Express DHL Priority (SG),Express,Active,Rate Card-Priority Express-DSG-03.04.2026.xlsx
+DLM,Express DHL Premium (MY),Express,Active,Rate Card-DHL Premium (MY)-DLM-27.05.2026.xlsx
+EXPRESS FEDEX ,,,,
+FXE,Express FedEx Economy (VN),Express,Active,Rate Card-Fedex Economy-FXE-03.06.2026.xlsx
+FXP,Express FedEx Economy Slow,Express,Active,Rate Card-Fedex Economy Slow-FXP-03.06.2026.xlsx
+FSG,Express FedEx Regular (SG),Express,Active,Rate Card-Fedex Regular Express-FSG-07.05.2026.xlsx
+EXPRESS UPS ,,,,
+USS,Express UPS Saver (VN),Express,Active,Rate Card-UPS Saver-USS-13.05.2026.xlsx
+USE,Express UPS Expedited (VN),Express,Active,Rate Card-UPS Expedited-USE-13.05.2026.xlsx
+BULK / FREIGHT,,,,
+SEA-01,Sea Freight LCL,Bulk/FBA,Active,Rate Card-Sea Freight LCL-SEA01-08.05.2026.xlsx
+SEA-02,FBA Sea (VN -US),Bulk/FBA,Experiment,Rate Card-FBA Sea-SEA02-01.06.2026.xlsx
