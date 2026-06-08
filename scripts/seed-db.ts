@@ -49,6 +49,15 @@ function cleanName(raw: string): string {
   return raw.replace(/[•·�]/g, '·').trim();
 }
 
+/**
+ * Extract origin country code from product name, e.g. "(VN)" → "VN".
+ * Defaults to "VN" when no code is present.
+ */
+function extractSource(productName: string): string {
+  const m = productName.match(/\(([A-Z]{2,3})\)\s*$/);
+  return m ? m[1] : 'VN';
+}
+
 /** Parse a "1.5%" discount string → "1.50" numeric string, or null. */
 function parseDiscount(raw: string | undefined): string | null {
   if (!raw?.trim()) return null;
@@ -62,6 +71,7 @@ type CardRow = {
   code: string;
   productName: string;
   category: string | null;
+  source: string;
   discountPublic: string | null;
   discountTier1: string | null;
   discountTier2: string | null;
@@ -83,10 +93,12 @@ function parseNewCatalog(): CardRow[] {
     const [code, productName, category, pub, t1, t2, t3, t4, t5, pt] = row;
     if (!code?.trim() || !productName?.trim()) continue;
 
+    const name = cleanName(productName);
     cards.push({
       code: code.trim(),
-      productName: cleanName(productName),
+      productName: name,
       category: category?.trim() || null,
+      source: extractSource(name),
       discountPublic: parseDiscount(pub),
       discountTier1: parseDiscount(t1),
       discountTier2: parseDiscount(t2),
@@ -108,17 +120,21 @@ function parseOldCatalog() {
   return rows
     .slice(1)
     .filter((row) => row[0]?.trim() && row[1]?.trim())
-    .map(([code, productName, category, status, sourceFile]) => ({
-      code: code.trim(),
-      productName: cleanName(productName),
-      category: category?.trim() || null,
-      status: status?.trim() || 'Active',
-      sourceFile: sourceFile?.trim() || null,
-      effectiveDate: (() => {
-        const m = sourceFile?.match(/(\d{2})\.(\d{2})\.(\d{4})/);
-        return m ? `${m[3]}-${m[2]}-${m[1]}` : null;
-      })(),
-    }));
+    .map(([code, productName, category, status, sourceFile]) => {
+      const name = cleanName(productName);
+      return {
+        code: code.trim(),
+        productName: name,
+        category: category?.trim() || null,
+        status: status?.trim() || 'Active',
+        source: extractSource(name),
+        sourceFile: sourceFile?.trim() || null,
+        effectiveDate: (() => {
+          const m = sourceFile?.match(/(\d{2})\.(\d{2})\.(\d{4})/);
+          return m ? `${m[3]}-${m[2]}-${m[1]}` : null;
+        })(),
+      };
+    });
 }
 
 // ─── Parse a terms CSV file ────────────────────────────────────────────────
@@ -328,6 +344,7 @@ async function main() {
         set: {
           productName: card.productName,
           category: card.category,
+          source: card.source,
           discountPublic: card.discountPublic,
           discountTier1: card.discountTier1,
           discountTier2: card.discountTier2,

@@ -14,6 +14,7 @@ type CardSummary = Pick<
   | 'productName'
   | 'category'
   | 'status'
+  | 'source'
   | 'discountPublic'
   | 'discountTier1'
   | 'discountTier2'
@@ -46,6 +47,7 @@ const mockCards: CardSummary[] = [
     discountTier4: '4.00',
     discountTier5: '6.00',
     discountPt: 'Contact Manager',
+    source: 'VN',
   },
   {
     code: 'YES',
@@ -59,6 +61,7 @@ const mockCards: CardSummary[] = [
     discountTier4: '4.00',
     discountTier5: '6.00',
     discountPt: 'Contact Manager',
+    source: 'VN',
   },
   {
     code: 'DLV',
@@ -72,6 +75,7 @@ const mockCards: CardSummary[] = [
     discountTier4: '5.00',
     discountTier5: '7.00',
     discountPt: 'Contact Manager',
+    source: 'VN',
   },
 ];
 

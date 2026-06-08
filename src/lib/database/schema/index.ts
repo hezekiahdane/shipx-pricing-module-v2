@@ -32,6 +32,8 @@ export const rateCards = pgTable('rate_cards', {
   effectiveDate: date('effective_date'),
   currency: text('currency').default('VND'),
   sourceFile: text('source_file'),
+  // Origin country code, e.g. 'VN', 'SG', 'MY'. Defaults to 'VN'.
+  source: text('source').default('VN').notNull(),
   // Tier discount percentages (e.g. 1.5 = 1.5%). NULL = not applicable.
   discountPublic: numeric('discount_public', { precision: 5, scale: 2 }),
   discountTier1: numeric('discount_tier1', { precision: 5, scale: 2 }),

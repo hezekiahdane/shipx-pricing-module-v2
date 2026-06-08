@@ -22,6 +22,7 @@ export async function listRateCards(): Promise<
     | 'productName'
     | 'category'
     | 'status'
+    | 'source'
     | 'discountPublic'
     | 'discountTier1'
     | 'discountTier2'
@@ -38,6 +39,7 @@ export async function listRateCards(): Promise<
       productName: rateCards.productName,
       category: rateCards.category,
       status: rateCards.status,
+      source: rateCards.source,
       discountPublic: rateCards.discountPublic,
       discountTier1: rateCards.discountTier1,
       discountTier2: rateCards.discountTier2,

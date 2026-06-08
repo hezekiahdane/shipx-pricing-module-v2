@@ -9,6 +9,7 @@ type CardSummary = Pick<
   | 'productName'
   | 'category'
   | 'status'
+  | 'source'
   | 'discountPublic'
   | 'discountTier1'
   | 'discountTier2'
@@ -142,8 +143,8 @@ export default function RateCardGrid({ cards, tiers }: RateCardGridProps) {
   }
 
   const sections = groupCards(cards);
-  // +1 for the row-click column (no header cell), +4 for code/name/cat/status
-  const colCount = 4 + tiers.length;
+  // code + name + category + status + source + tiers
+  const colCount = 5 + tiers.length;
 
   return (
     <div className="overflow-x-auto rounded-lg border border-gray-200">
@@ -163,6 +164,9 @@ export default function RateCardGrid({ cards, tiers }: RateCardGridProps) {
             <th className="px-3 py-3 text-left text-xs font-semibold uppercase tracking-wide">
               Status
             </th>
+            <th className="px-3 py-3 text-center text-xs font-semibold uppercase tracking-wide">
+              Source
+            </th>
             {tiers.map((t) => (
               <th
                 key={t.tierKey}
@@ -179,7 +183,7 @@ export default function RateCardGrid({ cards, tiers }: RateCardGridProps) {
           {/* Revenue threshold row — sits above the first section */}
           <tr className="border-b bg-gray-50">
             <td
-              colSpan={4}
+              colSpan={5}
               className="px-3 py-1.5 text-xs font-bold text-gray-700"
             >
               Tier Revenue Threshold
@@ -225,6 +229,11 @@ export default function RateCardGrid({ cards, tiers }: RateCardGridProps) {
                       {c.category}
                     </td>
                     <td className={`px-3 py-2.5 ${txtStyle}`}>{c.status}</td>
+                    <td className="px-3 py-2.5 text-center">
+                      <span className="inline-flex items-center rounded border border-gray-200 bg-gray-50 px-1.5 py-0.5 font-mono text-xs text-gray-600">
+                        {c.source}
+                      </span>
+                    </td>
                     {tiers.map((t) => {
                       const col = TIER_KEY_TO_COLUMN[t.tierKey];
                       return (
