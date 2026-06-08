@@ -73,6 +73,29 @@ export const tierThresholds = pgTable('tier_thresholds', {
   sortOrder: integer('sort_order').notNull(),
 });
 
+// Per-country transit times for a rate card.
+// transit_time_min / max are parsed from the raw string (e.g. "14 - 22" → 14, 22).
+export const transitTimes = pgTable(
+  'transit_times',
+  {
+    id: bigserial('id', { mode: 'number' }).primaryKey(),
+    cardCode: text('card_code')
+      .notNull()
+      .references(() => rateCards.code, { onDelete: 'cascade' }),
+    countryName: text('country_name').notNull(),
+    countryCode: text('country_code'),
+    zoneCode: text('zone_code'),
+    transitTimeMin: integer('transit_time_min'),
+    transitTimeMax: integer('transit_time_max'),
+    transitTimeRaw: text('transit_time_raw').notNull(),
+  },
+  (t) => [
+    index('idx_transit_times_card').on(t.cardCode),
+    unique().on(t.cardCode, t.countryCode),
+  ],
+);
+
 export type RateCard = typeof rateCards.$inferSelect;
 export type Rate = typeof rates.$inferSelect;
 export type TierThreshold = typeof tierThresholds.$inferSelect;
+export type TransitTime = typeof transitTimes.$inferSelect;

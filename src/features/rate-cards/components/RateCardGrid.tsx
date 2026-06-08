@@ -180,14 +180,14 @@ export default function RateCardGrid({ cards, tiers }: RateCardGridProps) {
           <tr className="border-b bg-gray-50">
             <td
               colSpan={4}
-              className="px-3 py-1.5 text-xs font-bold text-gray-400"
+              className="px-3 py-1.5 text-xs font-bold text-gray-700"
             >
-              Tier Revenue Threshold (VND / month)
+              Tier Revenue Threshold
             </td>
             {tiers.map((t) => (
               <td
                 key={t.tierKey}
-                className="px-3 py-1.5 text-center text-sm font-bold text-gray-400"
+                className="px-3 py-1.5 text-center text-sm font-bold text-gray-700"
               >
                 {fmtThreshold(t, tiers)}
               </td>

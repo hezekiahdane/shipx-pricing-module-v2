@@ -1,0 +1,255 @@
+Zone QSM,,,
+Country,Code,Zone,Transit time
+Afghanistan,AF,ROW,14- 22
+Albania,AL,S1,10 - 18
+Algeria,DZ,T3,14 - 22
+Andorra,AD,ROW,10-25
+Angola,AO,ROW,18 -26
+Anguilla,AI,ROW,14- 22
+Antarctica,AQ,ROW,10-25
+Antigua/ Barbads,AG,ROW,14- 22
+Argentina,AR,T,14 - 22
+Armenia,AM,S1,12 -18
+Aruba,AW,T1,12 -18
+Ascension,S1,ROW,14- 22
+Australia,AU,Australia,8-15
+Austria,AT,Austria,9-18
+Azerbaijan,AZ,ROW,12 -18
+Azores,AC,ROW,10-25
+Bahamas,BS,ROW,14- 22
+Bahrain,BH,T3,14 - 22
+Balearic Islands,IB,ROW,10-25
+Bangladesh,BD,C1,14- 22
+Barbados,BB,ROW,14- 22
+Belarus,BY,S1,14- 22
+Belgium,BE,Belgium,12 -18
+Belize,BZ,ROW,14- 22
+Benin,BJ,ROW,14- 22
+Bermuda,BM,ROW,14- 22
+Bhutan,BT,C1,11- 18
+Bolivia,BO,ROW,18 -26
+"Bonaire,Sint Eustatius,Saba (BES)",BQ,ROW,10-25
+Bosnia Herzegovina,BA,S1,14- 22
+Botswana,BW,ROW,14- 22
+Bouvet Island,BV,ROW,10-25
+Brazil,BR,T3,14 - 22
+Brit.Ind.Oc.Ter,IO,ROW,10-25
+Brunei,BN,Brunei,7-15
+Bulgaria,BG,S1,12 -18
+Burkina-Faso,BF,ROW,14- 22
+Burundi,BI,ROW,14- 22
+Cambodia,KH,C1-I,9 - 16
+Cameroon,CM,ROW,18 -26
+Canada,CA,Canada,8-15
+Canary Island,IC,ROW,10-25
+Cape Verde,CV,ROW,12 - 22
+Cayman Islands,KY,ROW,12 -18
+Central Afr.Rep,CF,ROW,10-25
+Chad,TD,ROW,12 -18
+Chile,CL,T1,18 -26
+China,CN,CI-1,8- 14
+Christmas Island,CX,ROW,10-25
+Cocos Islands,CC,ROW,10-25
+Colombia,CO,T,18 - 26
+Comoros,KM,ROW,12 -18
+Congo,CG,ROW,12 -18
+Cook Islands,CK,ROW,18 -26
+Costa Rica,CR,ROW,10 - 17
+Croatia,HR,S1,12 -18
+Cuba,CU,ROW,12 -18
+Curacao,CW,T1,18 -26
+Cyprus,CY,S1,12 -18
+Czech,CZ,S1,10 - 18
+Dem. Rep. East Timor,TL,ROW,10 - 18
+Democratic Rep of Congo,CD,T1,12 -18
+Denmark,DK,S1,8- 14
+Diego Garcia,DG,ROW,10-25
+Djibouti,DJ,ROW,12 -18
+Dominican Republic,DO,T1,12- 20
+Ecuador,EC,T2,12- 20
+Egypt,EG,T1-I,14 - 24
+El Salvador,SV,ROW,12 -18
+Equatorial Guinea,GQ,ROW,12 -18
+Eritrea,ER,ROW,12 -18
+Estonia,EE,S1-I,10 - 18
+Eswatini,SZ,T1,12 -18
+Ethiopia,ET,ROW,12 - 22
+Falkland Islnds,FK,ROW,10-25
+Faroe Island,FO,ROW,10-25
+Fiji,FJ,C,7-15
+Finland,FI,S2,10 - 18
+France,FR,S,8-18
+French Guinea,GF,ROW,12 - 22
+French Polynesia,PF,ROW,18 -26
+French South & Antr,TF,ROW,10-25
+Gabon,GA,ROW,12- 20
+Gambia,GM,ROW,12 -18
+Gaza & Khan Yunis,PS,ROW,10-25
+Georgia,GE,S1,14 - 18
+Germany,DE,Germany,9-17
+Ghana,GH,ROW,10 - 18
+Gibraltar,GI,S3,12 - 25
+Greece,GR,S1,11 - 20
+Greenland,GL,ROW,14- 22
+Grenada,GD,ROW,12 -18
+Guadeloupe,GP,T3,14 - 22
+Guam,GU,ROW,9- 16
+Guatemala,GT,ROW,12 -18
+Guernsey Island,GG,ROW,10-25
+Guinea Rep,GN,ROW,14- 22
+Guinea-Bissau,GW,ROW,10 - 18
+Guyana,GY,ROW,12 -18
+Haiti,HT,ROW,12 -18
+Honduras,HN,ROW,12 - 22
+Hong Kong,HK,C,7-15
+Hungary,HU,S1,12 -18
+Iceland,IS,S1,11- 18
+India,IN,C,8-15
+Indonesia,ID,Indonesia,11 - 20
+Iran,IR,T3,14 - 22
+Iraq,IQ,ROW,10 - 18
+Ireland,IE,S2-I,8- 16
+Isle of Man,IM,ROW,10-25
+Israel,IL,T3-I,14 - 22
+Italy,IT,S,8-18
+Ivory Coast,CI,ROW,10-25
+Jamaica,JM,ROW,12 -18
+Japan,JP,Japan,8-15
+Jersey,JE,S3,12 - 25
+Jordan,JO,T2,12- 20
+Kazakhstan,KZ,S1-I,12 -18
+Kenya,KE,ROW,12 -18
+Kiribati,KI,C2,15 - 25
+Kosovo,XK,ROW,10 - 18
+Kuwait,KW,T1,18 - 24
+Kyrgyzstan,KG,ROW,12 -18
+Laos,LA,C1-I,12 -18
+Latvia,LV,S1,10 - 18
+Lebanon,LB,ROW,10-25
+Lesotho,LS,ROW,12 -18
+Liberia,LR,ROW,12 -18
+Libya,LY,ROW,12 -18
+Liechtenstein,LI,ROW,10-25
+Lithuania,LT,S1-I,12 -18
+Luxembourg,LU,S1,10 - 16
+Macau,MO,C,10 - 16
+Macedonia,MK,ROW,9 - 16
+Madagascar,MG,ROW,12 - 22
+Madeira Island,P1,ROW,10-25
+Malawi,MW,ROW,12 -18
+Malaysia,MY,Malaysia,7-15
+Maldives,MV,C,12 - 22
+Mali Rep,ML,ROW,10-25
+Malta,MT,S1-I,12 -18
+Mariana Island,MP,ROW,10 - 18
+Marshall Islnds,MH,ROW,10-25
+Martinique,MQ,T3,14 - 22
+Mauritania Rep,MR,ROW,12 - 22
+Mauritius,MU,T2,12- 20
+Mayotte,YT,ROW,10-25
+Mexico,MX,T1,9-18
+Micronesia,FM,ROW,12 -18
+Moldova,MD,ROW,10 - 16
+Monaco,MC,ROW,10 - 16
+Mongolia,MN,C1,12 - 22
+Montenegro,ME,ROW,12 -18
+Montserrat,MS,ROW,10 - 18
+Morocco,MA,T1,14- 22
+Mozambique,MZ,ROW,12 -18
+Myanmar,MM,C1-I,9 - 16
+Namibia,NA,ROW,12 - 22
+Nauru,NR,ROW,12 -18
+Nepal,NP,C,12 -18
+Netherland Antilles,AN,ROW,12 -18
+Netherlands,NL,S1-I,8-18
+New Caledonia,NC,ROW,12- 20
+New Zealand,NZ,New Zealand,8-15
+Nicaragua,NI,ROW,12 -18
+Niger Rep,NE,ROW,12 -18
+Nigeria,NG,ROW,12- 20
+Niue Islands,NU,ROW,12 -18
+Norfolk Island,NF,ROW,10-25
+North Korea,KP,ROW,10 - 18
+Norway,NO,S2,10 - 18
+Oman,DM,T1,12 -18
+Oman,OM,ROW,9 - 16
+Pakistan,PK,C,12 -18
+Palau,PW,ROW,12 -18
+Panama,PA,ROW,12 -18
+Papua New Guinea,PG,C,9- 17
+Paraguay,PY,T2,12- 20
+Peru,PE,T1,12 - 22
+Philippines,PH,Philippines,8-15
+Pitcairn Islands,PN,ROW,12- 22
+Poland,PL,S1,10 - 18
+Portugal,PT,S2,9 - 16
+Puerto Rico,PR,ROW,12 -18
+Qatar,QA,ROW,12 -18
+Republic of Serbia,RS,S1,12 -18
+Reunion,RE,T3,14 - 22
+Romania,RO,S1,12 -18
+Russian Fed.,RU,ROW,12 -18
+Rwanda,RW,ROW,12 -18
+"Samoa,American",AS,ROW,10-25
+San Marino,SM,ROW,12 -18
+Sao Tome & Principe,ST,ROW,12 -18
+Saudi Arabia,SA,T3-I,14 - 22
+Senegal,SN,ROW,9 - 16
+Seychelles,SC,ROW,12 -18
+Sierra Leone,SL,ROW,12 -18
+Sint Maarten,SX,T1,18 -26
+Slovakia,SK,S1,12- 20
+Slovenia,SI,S1,10 - 18
+Solomon Island,SB,C2,15 - 25
+Somalia,SO,ROW,12 - 22
+South Africa,ZA,T2,12- 20
+South Georgia and the South Sandwich Islands,GS,ROW,10-25
+South Korea,KR,C,7-15
+South Sudan,SS,ROW,10-25
+Spain,ES,S2,8-18
+Sri Lanka,LK,C,18 -26
+ST BARTHELEMY       ,XY,ROW,10-25
+St. Lucia,LC,ROW,10 - 18
+St. Vincent,VC,ROW,10 - 18
+St.Helena,SH,ROW,10 - 18
+"St.Kitts,Nevis",KN,ROW,10 - 18
+"St.Pier,Miquel.",PM,ROW,10-25
+Sudan,SD,ROW,10 - 18
+Suriname,SR,ROW,18 -26
+Svalbard and Jan Mayen,SJ,ROW,10-25
+Sweden,SE,S2,10 - 18
+Switzerland,CH,S2,8-18
+Syria,SY,ROW,12 -18
+Taiwan,TW,C,7-15
+Tajikistan,TJ,ROW,10 - 18
+Tanzania,TZ,ROW,10 - 18
+Thailand,TH,Thailand,7-15
+Togo,TG,ROW,12 -18
+Tokelau Islands,TK,ROW,10-25
+Tonga,TO,ROW,12 -18
+Tortola(Brit.Vir.Is),VG,ROW,10-25
+Trinidad & Tobago,TT,ROW,12 -18
+Tristan da Cunha,TA,ROW,10 - 18
+Tunisia,TN,ROW,14- 22
+Turkey,TR,S1,12 -18
+Turkmenistan,TM,ROW,12 -18
+Turks & Caicos,TC,ROW,10 - 18
+Tuvalu,TV,C2,15 - 25
+Uganda,UG,ROW,12 -18
+Ukraine,UA,S1-I,12 -18
+United Arab Emirates,AE,T3,14 - 22
+United Kingdom,GB,SI,8-18
+United States,US,USA,7-15
+Uruguay,UT,T1,18 -26
+Uruguay,UY,ROW,10 - 18
+Uzbekistan,UZ,ROW,10 - 18
+Vanuatu,VU,Vanuatu,14- 22
+Vatican City,VA,ROW,10 - 18
+Venezuela,VE,ROW,12 -18
+Virgin Is.(USA),VI,ROW,12 -18
+"Wallis,Futuna",WF,ROW,10 - 18
+Western Sahara,EH,ROW,10-25
+Western Samoa,WS,ROW,10-25
+Yemen,YE,ROW,10 - 18
+Zambia,ZM,ROW,12 - 22
+Zimbabwe,ZW,T1,16- 22

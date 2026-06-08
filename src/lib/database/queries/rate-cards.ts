@@ -1,7 +1,17 @@
 import { asc, eq, sql } from 'drizzle-orm';
 import { getDb } from '@/lib/database';
-import type { Rate, RateCard, TierThreshold } from '@/lib/database/schema';
-import { rateCards, rates, tierThresholds } from '@/lib/database/schema';
+import type {
+  Rate,
+  RateCard,
+  TierThreshold,
+  TransitTime,
+} from '@/lib/database/schema';
+import {
+  rateCards,
+  rates,
+  tierThresholds,
+  transitTimes,
+} from '@/lib/database/schema';
 
 export async function listRateCards(): Promise<
   Pick<
@@ -44,6 +54,34 @@ export async function listTierThresholds(): Promise<TierThreshold[]> {
     .select()
     .from(tierThresholds)
     .orderBy(asc(tierThresholds.sortOrder));
+}
+
+export async function getTransitTimes(
+  cardCode: string,
+): Promise<
+  Pick<
+    TransitTime,
+    | 'countryName'
+    | 'countryCode'
+    | 'zoneCode'
+    | 'transitTimeMin'
+    | 'transitTimeMax'
+    | 'transitTimeRaw'
+  >[]
+> {
+  const db = getDb();
+  return db
+    .select({
+      countryName: transitTimes.countryName,
+      countryCode: transitTimes.countryCode,
+      zoneCode: transitTimes.zoneCode,
+      transitTimeMin: transitTimes.transitTimeMin,
+      transitTimeMax: transitTimes.transitTimeMax,
+      transitTimeRaw: transitTimes.transitTimeRaw,
+    })
+    .from(transitTimes)
+    .where(eq(transitTimes.cardCode, cardCode))
+    .orderBy(asc(transitTimes.countryName));
 }
 
 export async function getRateCard(code: string): Promise<RateCard | null> {

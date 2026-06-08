@@ -19,7 +19,12 @@ import { drizzle } from 'drizzle-orm/postgres-js';
 import { existsSync, readdirSync, readFileSync } from 'fs';
 import { join } from 'path';
 import postgres from 'postgres';
-import { rateCards, rates, tierThresholds } from '../src/lib/database/schema';
+import {
+  rateCards,
+  rates,
+  tierThresholds,
+  transitTimes,
+} from '../src/lib/database/schema';
 
 dotenv.config({ path: '.env.local' });
 
@@ -113,6 +118,50 @@ function parseOldCatalog() {
         return m ? `${m[3]}-${m[2]}-${m[1]}` : null;
       })(),
     }));
+}
+
+// ─── Parse a transit times CSV file ───────────────────────────────────────
+
+type TransitEntry = {
+  countryName: string;
+  countryCode: string | null;
+  zoneCode: string | null;
+  transitTimeMin: number | null;
+  transitTimeMax: number | null;
+  transitTimeRaw: string;
+};
+
+/** Parse "14 - 22", "7-15", "10-25" → { min, max } */
+function parseTransitRange(raw: string): {
+  min: number | null;
+  max: number | null;
+} {
+  const m = raw.match(/(\d+)\s*-\s*(\d+)/);
+  if (!m) return { min: null, max: null };
+  return { min: parseInt(m[1], 10), max: parseInt(m[2], 10) };
+}
+
+function parseTransitTimesCsv(filePath: string): TransitEntry[] {
+  const content = readFileSync(filePath, 'utf-8');
+  const rows = parseCsv(content, { skip_empty_lines: false }) as string[][];
+
+  const entries: TransitEntry[] = [];
+  for (const row of rows.slice(2)) {
+    // skip header rows (row 0 = title, row 1 = column names)
+    const [countryName, countryCode, zoneCode, transitTimeRaw] = row;
+    if (!countryName?.trim() || !transitTimeRaw?.trim()) continue;
+
+    const { min, max } = parseTransitRange(transitTimeRaw.trim());
+    entries.push({
+      countryName: countryName.trim(),
+      countryCode: countryCode?.trim() || null,
+      zoneCode: zoneCode?.trim() || null,
+      transitTimeMin: min,
+      transitTimeMax: max,
+      transitTimeRaw: transitTimeRaw.trim(),
+    });
+  }
+  return entries;
 }
 
 // ─── Parse a rates CSV file ────────────────────────────────────────────────
@@ -260,7 +309,10 @@ async function main() {
   // 4. Seed rates from any rates CSV files present
   const SKIP_FILES = new Set([NEW_CATALOG_FILE, OLD_CATALOG_FILE]);
   const ratesFiles = readdirSync(DOCS_DIR).filter(
-    (f) => f.endsWith('.csv') && !SKIP_FILES.has(f),
+    (f) =>
+      f.endsWith('.csv') &&
+      !SKIP_FILES.has(f) &&
+      !f.toLowerCase().includes('transit times'),
   );
 
   if (ratesFiles.length === 0) {
@@ -364,6 +416,52 @@ async function main() {
       });
   }
   console.log(`  → ${TIER_ROWS.length} tier thresholds upserted.`);
+
+  // 6. Seed transit times from "*- Transit times.csv" files
+  const transitFiles = readdirSync(DOCS_DIR).filter(
+    (f) => f.toLowerCase().includes('transit times') && f.endsWith('.csv'),
+  );
+
+  if (transitFiles.length > 0) {
+    console.log('\nSeeding transit_times...');
+    for (const file of transitFiles) {
+      // Extract card code from filename, e.g. "QSM - Transit times.csv" → "QSM"
+      const matchedCode = activeCodes.find((code) =>
+        file.toUpperCase().startsWith(code.toUpperCase()),
+      );
+      if (!matchedCode) {
+        console.log(`  ⚠ ${file}: could not match to a card code — skipping.`);
+        continue;
+      }
+      console.log(`  Processing: ${file} → ${matchedCode}`);
+      const entries = parseTransitTimesCsv(join(DOCS_DIR, file));
+
+      const BATCH = 100;
+      let upserted = 0;
+      for (let i = 0; i < entries.length; i += BATCH) {
+        const batch = entries
+          .slice(i, i + BATCH)
+          .map((e) => ({ cardCode: matchedCode, ...e }));
+        await db
+          .insert(transitTimes)
+          .values(batch)
+          .onConflictDoUpdate({
+            target: [transitTimes.cardCode, transitTimes.countryCode],
+            set: {
+              countryName: transitTimes.countryName,
+              zoneCode: transitTimes.zoneCode,
+              transitTimeMin: transitTimes.transitTimeMin,
+              transitTimeMax: transitTimes.transitTimeMax,
+              transitTimeRaw: transitTimes.transitTimeRaw,
+            },
+          });
+        upserted += batch.length;
+      }
+      console.log(
+        `  ✓ ${upserted} transit time entries upserted for ${matchedCode}`,
+      );
+    }
+  }
 
   await client.end();
   console.log('\nDone!');
