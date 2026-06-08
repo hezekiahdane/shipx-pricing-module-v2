@@ -91,6 +91,22 @@ function groupCards(cards: CardSummary[]) {
 
 // ─── Formatting helpers ────────────────────────────────────────────────────
 
+/**
+ * Format a VND threshold value for display in a column header.
+ * Finds the next tier to derive the "< X" label for the public tier.
+ */
+function fmtThreshold(tier: TierThreshold, allTiers: TierThreshold[]): string {
+  if (!tier.thresholdMinVnd) {
+    // Public tier: show "< [next tier]"
+    const next = allTiers.find((t) => t.sortOrder === tier.sortOrder + 1);
+    if (!next?.thresholdMinVnd) return '—';
+    const m = Number(next.thresholdMinVnd) / 1_000_000;
+    return `< ${m}M`;
+  }
+  const m = Number(tier.thresholdMinVnd) / 1_000_000;
+  return `≥ ${m}M`;
+}
+
 function fmtDiscount(val: string | null | undefined): string {
   if (!val) return '—';
   const n = parseFloat(val);
@@ -154,7 +170,7 @@ export default function RateCardGrid({ cards, tiers }: RateCardGridProps) {
               >
                 <div>{t.label}</div>
                 <div className="font-normal text-gray-400 normal-case tracking-normal">
-                  {t.thresholdDisplay}
+                  {fmtThreshold(t, tiers)}
                 </div>
               </th>
             ))}

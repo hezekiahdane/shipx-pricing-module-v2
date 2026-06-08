@@ -313,21 +313,42 @@ async function main() {
     console.log(`  ✓ ${upserted} rates upserted for ${matchedCode}\n`);
   }
 
-  // 5. Upsert tier thresholds (global config)
+  // 5. Upsert tier thresholds — thresholdMinVnd is the minimum monthly VND revenue.
+  // NULL = public tier (no minimum). Display is derived in the UI from the numeric value.
   console.log('\nSeeding tier_thresholds...');
   const TIER_ROWS = [
+    { tierKey: 'public', label: 'Public', thresholdMinVnd: null, sortOrder: 0 },
     {
-      tierKey: 'public',
-      label: 'Public',
-      thresholdDisplay: '< 20M',
-      sortOrder: 0,
+      tierKey: 'tier1',
+      label: 'T1',
+      thresholdMinVnd: '20000000',
+      sortOrder: 1,
     },
-    { tierKey: 'tier1', label: 'T1', thresholdDisplay: '≥ 20M', sortOrder: 1 },
-    { tierKey: 'tier2', label: 'T2', thresholdDisplay: '≥ 30M', sortOrder: 2 },
-    { tierKey: 'tier3', label: 'T3', thresholdDisplay: '≥ 40M', sortOrder: 3 },
-    { tierKey: 'tier4', label: 'T4', thresholdDisplay: '≥ 70M', sortOrder: 4 },
-    { tierKey: 'tier5', label: 'T5', thresholdDisplay: '≥ 120M', sortOrder: 5 },
-    { tierKey: 'pt', label: 'PT', thresholdDisplay: '≥ 200M', sortOrder: 6 },
+    {
+      tierKey: 'tier2',
+      label: 'T2',
+      thresholdMinVnd: '30000000',
+      sortOrder: 2,
+    },
+    {
+      tierKey: 'tier3',
+      label: 'T3',
+      thresholdMinVnd: '40000000',
+      sortOrder: 3,
+    },
+    {
+      tierKey: 'tier4',
+      label: 'T4',
+      thresholdMinVnd: '70000000',
+      sortOrder: 4,
+    },
+    {
+      tierKey: 'tier5',
+      label: 'T5',
+      thresholdMinVnd: '120000000',
+      sortOrder: 5,
+    },
+    { tierKey: 'pt', label: 'PT', thresholdMinVnd: '200000000', sortOrder: 6 },
   ];
   for (const row of TIER_ROWS) {
     await db
@@ -337,7 +358,7 @@ async function main() {
         target: tierThresholds.tierKey,
         set: {
           label: row.label,
-          thresholdDisplay: row.thresholdDisplay,
+          thresholdMinVnd: row.thresholdMinVnd,
           sortOrder: row.sortOrder,
         },
       });

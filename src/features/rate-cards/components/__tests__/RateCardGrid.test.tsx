@@ -24,18 +24,13 @@ type CardSummary = Pick<
 >;
 
 const mockTiers: TierThreshold[] = [
-  {
-    tierKey: 'public',
-    label: 'Public',
-    thresholdDisplay: '< 20M',
-    sortOrder: 0,
-  },
-  { tierKey: 'tier1', label: 'T1', thresholdDisplay: '≥ 20M', sortOrder: 1 },
-  { tierKey: 'tier2', label: 'T2', thresholdDisplay: '≥ 30M', sortOrder: 2 },
-  { tierKey: 'tier3', label: 'T3', thresholdDisplay: '≥ 40M', sortOrder: 3 },
-  { tierKey: 'tier4', label: 'T4', thresholdDisplay: '≥ 70M', sortOrder: 4 },
-  { tierKey: 'tier5', label: 'T5', thresholdDisplay: '≥ 120M', sortOrder: 5 },
-  { tierKey: 'pt', label: 'PT', thresholdDisplay: '≥ 200M', sortOrder: 6 },
+  { tierKey: 'public', label: 'Public', thresholdMinVnd: null, sortOrder: 0 },
+  { tierKey: 'tier1', label: 'T1', thresholdMinVnd: '20000000', sortOrder: 1 },
+  { tierKey: 'tier2', label: 'T2', thresholdMinVnd: '30000000', sortOrder: 2 },
+  { tierKey: 'tier3', label: 'T3', thresholdMinVnd: '40000000', sortOrder: 3 },
+  { tierKey: 'tier4', label: 'T4', thresholdMinVnd: '70000000', sortOrder: 4 },
+  { tierKey: 'tier5', label: 'T5', thresholdMinVnd: '120000000', sortOrder: 5 },
+  { tierKey: 'pt', label: 'PT', thresholdMinVnd: '200000000', sortOrder: 6 },
 ];
 
 const mockCards: CardSummary[] = [
@@ -98,9 +93,11 @@ describe('RateCardGrid', () => {
     expect(screen.getAllByText('1.5%').length).toBeGreaterThanOrEqual(1);
   });
 
-  it('renders threshold labels from tiers prop', () => {
+  it('derives threshold display from VND values', () => {
     render(<RateCardGrid cards={mockCards} tiers={mockTiers} />);
+    // Public tier: derived as "< 20M" from the next tier's thresholdMinVnd (20000000)
     expect(screen.getByText('< 20M')).toBeInTheDocument();
+    // T1: derived as "≥ 20M" from thresholdMinVnd = 20000000
     expect(screen.getByText('≥ 20M')).toBeInTheDocument();
   });
 

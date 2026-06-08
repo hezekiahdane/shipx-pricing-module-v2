@@ -62,12 +62,14 @@ export const rates = pgTable(
   ],
 );
 
-// Global tier threshold configuration (label + revenue band per tier).
-// One row per tier key ('public', 'tier1' … 'tier5', 'pt').
+// Global tier threshold configuration.
+// One row per tier. thresholdMinVnd is the minimum monthly revenue in VND
+// required to qualify for this tier. NULL = public tier (no minimum).
 export const tierThresholds = pgTable('tier_thresholds', {
   tierKey: text('tier_key').primaryKey(),
   label: text('label').notNull(),
-  thresholdDisplay: text('threshold_display').notNull(),
+  // e.g. 20000000 for T1 (>= 20 000 000 VND/month). NULL for public tier.
+  thresholdMinVnd: numeric('threshold_min_vnd', { precision: 15, scale: 0 }),
   sortOrder: integer('sort_order').notNull(),
 });
 
