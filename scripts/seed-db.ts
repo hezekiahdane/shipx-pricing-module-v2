@@ -19,7 +19,7 @@ import { drizzle } from 'drizzle-orm/postgres-js';
 import { existsSync, readdirSync, readFileSync } from 'fs';
 import { join } from 'path';
 import postgres from 'postgres';
-import { rateCards, rates } from '../src/lib/database/schema';
+import { rateCards, rates, tierThresholds } from '../src/lib/database/schema';
 
 dotenv.config({ path: '.env.local' });
 
@@ -313,8 +313,39 @@ async function main() {
     console.log(`  ✓ ${upserted} rates upserted for ${matchedCode}\n`);
   }
 
+  // 5. Upsert tier thresholds (global config)
+  console.log('\nSeeding tier_thresholds...');
+  const TIER_ROWS = [
+    {
+      tierKey: 'public',
+      label: 'Public',
+      thresholdDisplay: '< 20M',
+      sortOrder: 0,
+    },
+    { tierKey: 'tier1', label: 'T1', thresholdDisplay: '≥ 20M', sortOrder: 1 },
+    { tierKey: 'tier2', label: 'T2', thresholdDisplay: '≥ 30M', sortOrder: 2 },
+    { tierKey: 'tier3', label: 'T3', thresholdDisplay: '≥ 40M', sortOrder: 3 },
+    { tierKey: 'tier4', label: 'T4', thresholdDisplay: '≥ 70M', sortOrder: 4 },
+    { tierKey: 'tier5', label: 'T5', thresholdDisplay: '≥ 120M', sortOrder: 5 },
+    { tierKey: 'pt', label: 'PT', thresholdDisplay: '≥ 200M', sortOrder: 6 },
+  ];
+  for (const row of TIER_ROWS) {
+    await db
+      .insert(tierThresholds)
+      .values(row)
+      .onConflictDoUpdate({
+        target: tierThresholds.tierKey,
+        set: {
+          label: row.label,
+          thresholdDisplay: row.thresholdDisplay,
+          sortOrder: row.sortOrder,
+        },
+      });
+  }
+  console.log(`  → ${TIER_ROWS.length} tier thresholds upserted.`);
+
   await client.end();
-  console.log('Done!');
+  console.log('\nDone!');
 }
 
 main().catch((err) => {

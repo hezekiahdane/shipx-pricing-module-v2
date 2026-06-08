@@ -2,6 +2,7 @@ import {
   bigserial,
   date,
   index,
+  integer,
   numeric,
   pgTable,
   text,
@@ -61,5 +62,15 @@ export const rates = pgTable(
   ],
 );
 
+// Global tier threshold configuration (label + revenue band per tier).
+// One row per tier key ('public', 'tier1' … 'tier5', 'pt').
+export const tierThresholds = pgTable('tier_thresholds', {
+  tierKey: text('tier_key').primaryKey(),
+  label: text('label').notNull(),
+  thresholdDisplay: text('threshold_display').notNull(),
+  sortOrder: integer('sort_order').notNull(),
+});
+
 export type RateCard = typeof rateCards.$inferSelect;
 export type Rate = typeof rates.$inferSelect;
+export type TierThreshold = typeof tierThresholds.$inferSelect;

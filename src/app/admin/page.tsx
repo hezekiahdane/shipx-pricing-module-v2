@@ -1,12 +1,18 @@
 import RateCardGrid from '@/features/rate-cards/components/RateCardGrid';
-import { listRateCards } from '@/lib/database/queries/rate-cards';
+import {
+  listRateCards,
+  listTierThresholds,
+} from '@/lib/database/queries/rate-cards';
 
 export default async function AdminDashboard() {
-  const cards = await listRateCards();
+  const [cards, tiers] = await Promise.all([
+    listRateCards(),
+    listTierThresholds(),
+  ]);
   return (
     <div className="mx-auto max-w-6xl space-y-4">
       <h2 className="text-lg font-semibold">Rate Cards</h2>
-      <RateCardGrid cards={cards} />
+      <RateCardGrid cards={cards} tiers={tiers} />
     </div>
   );
 }

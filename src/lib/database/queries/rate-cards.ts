@@ -1,7 +1,7 @@
 import { asc, eq, sql } from 'drizzle-orm';
 import { getDb } from '@/lib/database';
-import type { Rate, RateCard } from '@/lib/database/schema';
-import { rateCards, rates } from '@/lib/database/schema';
+import type { Rate, RateCard, TierThreshold } from '@/lib/database/schema';
+import { rateCards, rates, tierThresholds } from '@/lib/database/schema';
 
 export async function listRateCards(): Promise<
   Pick<
@@ -36,6 +36,14 @@ export async function listRateCards(): Promise<
     })
     .from(rateCards)
     .orderBy(sql`${rateCards.category} NULLS LAST`, asc(rateCards.code));
+}
+
+export async function listTierThresholds(): Promise<TierThreshold[]> {
+  const db = getDb();
+  return db
+    .select()
+    .from(tierThresholds)
+    .orderBy(asc(tierThresholds.sortOrder));
 }
 
 export async function getRateCard(code: string): Promise<RateCard | null> {

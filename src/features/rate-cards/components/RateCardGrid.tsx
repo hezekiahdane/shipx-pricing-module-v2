@@ -1,7 +1,7 @@
 'use client';
 import { useRouter } from 'next/navigation';
 import { Fragment } from 'react';
-import type { RateCard } from '@/lib/database/schema';
+import type { RateCard, TierThreshold } from '@/lib/database/schema';
 
 type CardSummary = Pick<
   RateCard,
@@ -18,14 +18,11 @@ type CardSummary = Pick<
   | 'discountPt'
 >;
 
-interface RateCardGridProps {
-  cards: CardSummary[];
-}
-
-// ─── Tier column definitions ───────────────────────────────────────────────
-
-const TIERS: {
-  key: keyof Pick<
+// Maps a tier_key from the DB to the corresponding discount column on CardSummary.
+// 'pt' has no discount column — it renders as a plain "PT" label.
+const TIER_KEY_TO_COLUMN: Record<
+  string,
+  keyof Pick<
     CardSummary,
     | 'discountPublic'
     | 'discountTier1'
@@ -33,20 +30,20 @@ const TIERS: {
     | 'discountTier3'
     | 'discountTier4'
     | 'discountTier5'
-  >;
-  label: string;
-  sub: string;
-}[] = [
-  { key: 'discountPublic', label: 'Public', sub: '< 20M' },
-  { key: 'discountTier1', label: 'T1', sub: '≥ 20M' },
-  { key: 'discountTier2', label: 'T2', sub: '≥ 30M' },
-  { key: 'discountTier3', label: 'T3', sub: '≥ 40M' },
-  { key: 'discountTier4', label: 'T4', sub: '≥ 70M' },
-  { key: 'discountTier5', label: 'T5', sub: '≥ 120M' },
-];
+  >
+> = {
+  public: 'discountPublic',
+  tier1: 'discountTier1',
+  tier2: 'discountTier2',
+  tier3: 'discountTier3',
+  tier4: 'discountTier4',
+  tier5: 'discountTier5',
+};
 
-// Total column count (used for colSpan on section headers)
-const COL_COUNT = 4 + TIERS.length + 1; // code+name+cat+status + tiers + PT
+interface RateCardGridProps {
+  cards: CardSummary[];
+  tiers: TierThreshold[];
+}
 
 // ─── Section grouping ──────────────────────────────────────────────────────
 
@@ -94,13 +91,12 @@ function groupCards(cards: CardSummary[]) {
 
 // ─── Formatting helpers ────────────────────────────────────────────────────
 
-function fmtDiscount(val: string | null): string {
+function fmtDiscount(val: string | null | undefined): string {
   if (!val) return '—';
   const n = parseFloat(val);
   return Number.isNaN(n) ? '—' : `${n}%`;
 }
 
-/** Replace the stored middle-dot separator with an em-dash for display. */
 function fmtName(name: string): string {
   return name.replace(/\s*·\s*/g, ' — ');
 }
@@ -122,7 +118,7 @@ const ROW_BG: Record<string, string> = {
 
 // ─── Component ─────────────────────────────────────────────────────────────
 
-export default function RateCardGrid({ cards }: RateCardGridProps) {
+export default function RateCardGrid({ cards, tiers }: RateCardGridProps) {
   const router = useRouter();
 
   if (cards.length === 0) {
@@ -130,6 +126,8 @@ export default function RateCardGrid({ cards }: RateCardGridProps) {
   }
 
   const sections = groupCards(cards);
+  // +1 for the row-click column (no header cell), +4 for code/name/cat/status
+  const colCount = 4 + tiers.length;
 
   return (
     <div className="overflow-x-auto rounded-lg border border-gray-200">
@@ -149,20 +147,17 @@ export default function RateCardGrid({ cards }: RateCardGridProps) {
             <th className="px-3 py-3 text-left text-xs font-semibold uppercase tracking-wide">
               Status
             </th>
-            {TIERS.map((t) => (
+            {tiers.map((t) => (
               <th
-                key={t.key}
+                key={t.tierKey}
                 className="px-3 py-3 text-center text-xs font-semibold uppercase tracking-wide"
               >
                 <div>{t.label}</div>
                 <div className="font-normal text-gray-400 normal-case tracking-normal">
-                  {t.sub}
+                  {t.thresholdDisplay}
                 </div>
               </th>
             ))}
-            <th className="px-3 py-3 text-center text-xs font-semibold uppercase tracking-wide">
-              PT
-            </th>
           </tr>
         </thead>
 
@@ -170,17 +165,15 @@ export default function RateCardGrid({ cards }: RateCardGridProps) {
         <tbody className="divide-y divide-gray-100 bg-white">
           {sections.map((section) => (
             <Fragment key={section.label}>
-              {/* Section header row */}
               <tr className="bg-gray-100">
                 <td
-                  colSpan={COL_COUNT}
+                  colSpan={colCount}
                   className="px-3 py-1.5 text-xs font-semibold uppercase tracking-wider text-gray-500"
                 >
                   {section.label}
                 </td>
               </tr>
 
-              {/* Card rows */}
               {section.cards.map((c) => {
                 const rowBg = ROW_BG[c.status ?? ''] ?? '';
                 const txtStyle = STATUS_TEXT[c.status ?? ''] ?? 'text-gray-500';
@@ -201,17 +194,17 @@ export default function RateCardGrid({ cards }: RateCardGridProps) {
                       {c.category}
                     </td>
                     <td className={`px-3 py-2.5 ${txtStyle}`}>{c.status}</td>
-                    {TIERS.map((t) => (
-                      <td
-                        key={t.key}
-                        className="px-3 py-2.5 text-center tabular-nums text-gray-700"
-                      >
-                        {fmtDiscount(c[t.key])}
-                      </td>
-                    ))}
-                    <td className="px-3 py-2.5 text-center text-xs text-gray-400">
-                      PT
-                    </td>
+                    {tiers.map((t) => {
+                      const col = TIER_KEY_TO_COLUMN[t.tierKey];
+                      return (
+                        <td
+                          key={t.tierKey}
+                          className="px-3 py-2.5 text-center tabular-nums text-gray-700"
+                        >
+                          {col ? fmtDiscount(c[col]) : 'PT'}
+                        </td>
+                      );
+                    })}
                   </tr>
                 );
               })}
