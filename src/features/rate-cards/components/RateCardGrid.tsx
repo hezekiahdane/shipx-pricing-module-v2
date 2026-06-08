@@ -178,7 +178,12 @@ export default function RateCardGrid({ cards, tiers }: RateCardGridProps) {
         <tbody className="divide-y divide-gray-100 bg-white">
           {/* Revenue threshold row — sits above the first section */}
           <tr className="border-b bg-gray-50">
-            <td colSpan={4} />
+            <td
+              colSpan={4}
+              className="px-3 py-1.5 text-xs font-bold text-gray-400"
+            >
+              Tier Revenue Threshold (VND / month)
+            </td>
             {tiers.map((t) => (
               <td
                 key={t.tierKey}
