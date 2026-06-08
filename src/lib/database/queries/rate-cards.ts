@@ -10,8 +10,13 @@ export async function listRateCards(): Promise<
     | 'productName'
     | 'category'
     | 'status'
-    | 'currency'
-    | 'effectiveDate'
+    | 'discountPublic'
+    | 'discountTier1'
+    | 'discountTier2'
+    | 'discountTier3'
+    | 'discountTier4'
+    | 'discountTier5'
+    | 'discountPt'
   >[]
 > {
   const db = getDb();
@@ -21,8 +26,13 @@ export async function listRateCards(): Promise<
       productName: rateCards.productName,
       category: rateCards.category,
       status: rateCards.status,
-      currency: rateCards.currency,
-      effectiveDate: rateCards.effectiveDate,
+      discountPublic: rateCards.discountPublic,
+      discountTier1: rateCards.discountTier1,
+      discountTier2: rateCards.discountTier2,
+      discountTier3: rateCards.discountTier3,
+      discountTier4: rateCards.discountTier4,
+      discountTier5: rateCards.discountTier5,
+      discountPt: rateCards.discountPt,
     })
     .from(rateCards)
     .orderBy(sql`${rateCards.category} NULLS LAST`, asc(rateCards.code));
