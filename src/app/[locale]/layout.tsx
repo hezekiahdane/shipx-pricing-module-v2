@@ -2,14 +2,12 @@ import type { Metadata } from 'next';
 import { headers } from 'next/headers';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
-import { Analytics, SpeedInsights } from '@/lib/monitoring';
-import '@/app/globals.css';
-
 import { JsonLd } from '@/components/common/JsonLd';
 import { DevPanelWrapper } from '@/components/dev/DevPanelWrapper';
 import { devPanelConfig } from '@/config/dev-panel.config';
 import { siteConfig } from '@/lib/core/config/site';
 import { env } from '@/lib/core/env';
+import { Analytics, SpeedInsights } from '@/lib/monitoring';
 import { createOrganizationSchema, createWebSiteSchema } from '@/lib/seo';
 
 export async function generateMetadata({
@@ -99,21 +97,17 @@ export default async function LocaleLayout({
   });
 
   return (
-    <html lang={locale}>
-      <body className="font-body flex min-h-screen flex-col">
-        <JsonLd schema={[orgSchema, websiteSchema]} />
-        <NextIntlClientProvider messages={messages} locale={locale}>
-          {isDev ? (
-            <DevPanelWrapper config={devPanelConfig}>
-              {children}
-            </DevPanelWrapper>
-          ) : (
-            children
-          )}
-        </NextIntlClientProvider>
-        <Analytics />
-        <SpeedInsights />
-      </body>
-    </html>
+    <div className="flex min-h-screen flex-col">
+      <JsonLd schema={[orgSchema, websiteSchema]} />
+      <NextIntlClientProvider messages={messages} locale={locale}>
+        {isDev ? (
+          <DevPanelWrapper config={devPanelConfig}>{children}</DevPanelWrapper>
+        ) : (
+          children
+        )}
+      </NextIntlClientProvider>
+      <Analytics />
+      <SpeedInsights />
+    </div>
   );
 }

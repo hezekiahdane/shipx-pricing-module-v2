@@ -1,9 +1,15 @@
-// Minimal root layout required by Next.js App Router.
-// All real layout work (html, body, providers) happens in [locale]/layout.tsx.
+import '@/app/globals.css';
+
+// Root layout — required by Next.js to provide <html> and <body>.
+// All nested layouts (locale, admin) inherit from this.
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  return children;
+  return (
+    <html lang="en">
+      <body className="font-body">{children}</body>
+    </html>
+  );
 }
