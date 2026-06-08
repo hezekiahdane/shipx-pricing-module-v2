@@ -56,6 +56,52 @@ export async function listTierThresholds(): Promise<TierThreshold[]> {
     .orderBy(asc(tierThresholds.sortOrder));
 }
 
+/**
+ * Returns transit time info keyed by zone_code.
+ * Zone codes in transit_times can be short codes (C, S1, ROW) or destination
+ * names (USA, Germany) — both appear as keys in the returned record so
+ * RatesTable can look up by either rates.zoneCode or rates.destination.
+ */
+export async function getTransitTimesByZone(
+  cardCode: string,
+): Promise<Record<string, { min: number | null; max: number | null }>> {
+  const db = getDb();
+  const rows = await db
+    .select({
+      zoneCode: transitTimes.zoneCode,
+      transitTimeMin: transitTimes.transitTimeMin,
+      transitTimeMax: transitTimes.transitTimeMax,
+    })
+    .from(transitTimes)
+    .where(eq(transitTimes.cardCode, cardCode));
+
+  const result: Record<string, { min: number | null; max: number | null }> = {};
+  for (const row of rows) {
+    if (!row.zoneCode) continue;
+    const prev = result[row.zoneCode];
+    if (!prev) {
+      result[row.zoneCode] = {
+        min: row.transitTimeMin,
+        max: row.transitTimeMax,
+      };
+    } else {
+      result[row.zoneCode] = {
+        min:
+          row.transitTimeMin !== null &&
+          (prev.min === null || row.transitTimeMin < prev.min)
+            ? row.transitTimeMin
+            : prev.min,
+        max:
+          row.transitTimeMax !== null &&
+          (prev.max === null || row.transitTimeMax > prev.max)
+            ? row.transitTimeMax
+            : prev.max,
+      };
+    }
+  }
+  return result;
+}
+
 export async function getTransitTimes(
   cardCode: string,
 ): Promise<

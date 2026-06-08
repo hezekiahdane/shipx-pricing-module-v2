@@ -5,6 +5,7 @@ import {
   getRateCard,
   getRates,
   getTransitTimes,
+  getTransitTimesByZone,
 } from '@/lib/database/queries/rate-cards';
 
 interface Props {
@@ -16,9 +17,10 @@ export default async function CardPage({ params }: Props) {
   const card = await getRateCard(code);
   if (!card) notFound();
 
-  const [rates, transit] = await Promise.all([
+  const [rates, transit, transitByZone] = await Promise.all([
     getRates(code),
     getTransitTimes(code),
+    getTransitTimesByZone(code),
   ]);
 
   return (
@@ -37,7 +39,11 @@ export default async function CardPage({ params }: Props) {
         <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-500">
           Rates
         </h2>
-        <RatesTable rates={rates} currency={card.currency ?? 'VND'} />
+        <RatesTable
+          rates={rates}
+          currency={card.currency ?? 'VND'}
+          transitByZone={transitByZone}
+        />
       </section>
 
       {transit.length > 0 && (
