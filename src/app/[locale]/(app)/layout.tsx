@@ -1,6 +1,7 @@
-import Link from 'next/link';
 import { redirect } from 'next/navigation';
-import { auth, signOut } from '@/auth';
+import { auth } from '@/auth';
+import Footer from '@/components/layout/Footer';
+import Navbar from '@/components/layout/Navbar';
 
 export default async function AppLayout({
   children,
@@ -11,26 +12,10 @@ export default async function AppLayout({
   if (!session) redirect('/login');
 
   return (
-    <div>
-      <header className="flex items-center justify-between border-b bg-white px-6 py-3">
-        <Link href="/" className="font-semibold tracking-tight">
-          Rate Cards
-        </Link>
-        <form
-          action={async () => {
-            'use server';
-            await signOut({ redirectTo: '/login' });
-          }}
-        >
-          <button
-            type="submit"
-            className="text-sm text-gray-500 hover:text-gray-900"
-          >
-            Sign out
-          </button>
-        </form>
-      </header>
-      <div className="p-6">{children}</div>
+    <div className="flex min-h-screen flex-col">
+      <Navbar />
+      <main className="flex-1 p-6">{children}</main>
+      <Footer />
     </div>
   );
 }
