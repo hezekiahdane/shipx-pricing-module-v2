@@ -17,6 +17,9 @@ import { siteConfig } from '@/lib/core/config/site';
 export const routing = defineRouting({
   locales: siteConfig.locales,
   defaultLocale: siteConfig.defaultLocale,
+  // Default locale (en) is served without a /en/ prefix.
+  // /admin → admin dashboard, /jp/admin → Japanese admin.
+  localePrefix: 'as-needed',
 });
 
 // Lightweight wrappers around Next.js' navigation APIs
