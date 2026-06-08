@@ -93,12 +93,12 @@ describe('RateCardGrid', () => {
     expect(screen.getAllByText('1.5%').length).toBeGreaterThanOrEqual(1);
   });
 
-  it('derives threshold display from VND values', () => {
+  it('renders threshold values in a dedicated row above the sections', () => {
     render(<RateCardGrid cards={mockCards} tiers={mockTiers} />);
-    // Public tier: derived as "< 20M" from the next tier's thresholdMinVnd (20000000)
+    // Derived from VND values, displayed in the threshold row in tbody
     expect(screen.getByText('< 20M')).toBeInTheDocument();
-    // T1: derived as "≥ 20M" from thresholdMinVnd = 20000000
     expect(screen.getByText('≥ 20M')).toBeInTheDocument();
+    expect(screen.getByText('≥ 70M')).toBeInTheDocument();
   });
 
   it('renders section header rows for Economy groups', () => {

@@ -168,10 +168,7 @@ export default function RateCardGrid({ cards, tiers }: RateCardGridProps) {
                 key={t.tierKey}
                 className="px-3 py-3 text-center text-xs font-semibold uppercase tracking-wide"
               >
-                <div>{t.label}</div>
-                <div className="font-normal text-gray-400 normal-case tracking-normal">
-                  {fmtThreshold(t, tiers)}
-                </div>
+                {t.label}
               </th>
             ))}
           </tr>
@@ -179,6 +176,19 @@ export default function RateCardGrid({ cards, tiers }: RateCardGridProps) {
 
         {/* ── Sections ── */}
         <tbody className="divide-y divide-gray-100 bg-white">
+          {/* Revenue threshold row — sits above the first section */}
+          <tr className="border-b bg-gray-50">
+            <td colSpan={4} />
+            {tiers.map((t) => (
+              <td
+                key={t.tierKey}
+                className="px-3 py-1.5 text-center text-xs text-gray-400"
+              >
+                {fmtThreshold(t, tiers)}
+              </td>
+            ))}
+          </tr>
+
           {sections.map((section) => (
             <Fragment key={section.label}>
               <tr className="bg-gray-100">
