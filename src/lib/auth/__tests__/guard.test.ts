@@ -7,11 +7,12 @@ function makeRequest(pathname: string): NextRequest {
 }
 
 describe('authGuard', () => {
-  it('allows access to non-protected routes without session', () => {
+  it('redirects unauthenticated access to / (all non-public routes are protected)', () => {
     const req = makeRequest('/en');
     const res = NextResponse.next();
     const result = authGuard(req, res, false);
-    expect(result.headers.get('location')).toBeNull();
+    expect(result.status).toBe(307);
+    expect(result.headers.get('location')).toContain('/login');
   });
 
   it('redirects to login for protected route without session', () => {
@@ -111,12 +112,13 @@ describe('authGuard', () => {
     expect(result.status).toBe(200);
   });
 
-  it('does not redirect unauthenticated access to /en/ (home guarded by layout)', () => {
+  it('redirects unauthenticated access to /en/ (home is protected by middleware)', () => {
     const result = authGuard(
       new NextRequest('http://localhost:3000/en/'),
       NextResponse.next(),
       false,
     );
-    expect(result.status).toBe(200);
+    expect(result.status).toBe(307);
+    expect(result.headers.get('location')).toContain('/login');
   });
 });

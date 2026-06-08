@@ -8,8 +8,9 @@ interface Props {
 
 export default async function CardPage({ params }: Props) {
   const { code } = await params;
-  const [card, rates] = await Promise.all([getRateCard(code), getRates(code)]);
+  const card = await getRateCard(code);
   if (!card) notFound();
+  const rates = await getRates(code);
 
   return (
     <div className="space-y-6">
