@@ -1,7 +1,7 @@
 import RateCardGrid from '@/features/rate-cards/components/RateCardGrid';
 import { listRateCards } from '@/lib/database/queries/rate-cards';
 
-export default async function AdminHomePage() {
+export default async function AdminDashboard() {
   const cards = await listRateCards();
   return (
     <div className="mx-auto max-w-6xl space-y-4">
