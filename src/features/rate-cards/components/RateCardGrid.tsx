@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { Fragment } from 'react';
 import type { RateCard } from '@/lib/database/schema';
 
 type CardSummary = Pick<
@@ -166,9 +167,9 @@ export default function RateCardGrid({ cards }: RateCardGridProps) {
         {/* ── Sections ── */}
         <tbody className="divide-y divide-gray-100 bg-white">
           {sections.map((section) => (
-            <>
+            <Fragment key={section.label}>
               {/* Section header row */}
-              <tr key={`hdr-${section.label}`} className="bg-gray-100">
+              <tr className="bg-gray-100">
                 <td
                   colSpan={COL_COUNT}
                   className="px-3 py-1.5 text-xs font-semibold uppercase tracking-wider text-gray-500"
@@ -219,7 +220,7 @@ export default function RateCardGrid({ cards }: RateCardGridProps) {
                   </tr>
                 );
               })}
-            </>
+            </Fragment>
           ))}
         </tbody>
       </table>
