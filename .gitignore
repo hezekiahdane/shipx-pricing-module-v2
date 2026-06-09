@@ -51,3 +51,4 @@ next-env.d.ts
 *.gitdocai.lock
 *.ai.metadata.json
 .ai.metadata.json
+.worktrees/
