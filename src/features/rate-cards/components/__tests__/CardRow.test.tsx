@@ -126,7 +126,7 @@ describe('CardRow — read mode', () => {
   });
 
   it('renders "—" for null discount', () => {
-    renderRow({ discountPublic: null });
+    renderRow({ discountPublic: undefined });
     // At least one em dash rendered (discountPublic is null)
     expect(screen.getAllByText('—').length).toBeGreaterThanOrEqual(1);
   });
