@@ -4,10 +4,7 @@ import { eq } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
 import { getDb } from '@/lib/database';
 import { rateCards, tierThresholds } from '@/lib/database/schema';
-import {
-  discountUpdateSchema,
-  thresholdUpdateSchema,
-} from '@/lib/validators/rate-cards.schema';
+import { discountUpdateSchema, thresholdUpdateSchema } from '@/lib/validators';
 
 export async function updateRateCardDiscounts(
   code: string,
@@ -27,7 +24,7 @@ export async function updateRateCardDiscounts(
 
   try {
     const db = getDb();
-    await db
+    const result = await db
       .update(rateCards)
       .set({
         discountPublic: String(parsed.data.discounts.discountPublic),
@@ -37,7 +34,11 @@ export async function updateRateCardDiscounts(
         discountTier4: String(parsed.data.discounts.discountTier4),
         discountTier5: String(parsed.data.discounts.discountTier5),
       })
-      .where(eq(rateCards.code, parsed.data.code));
+      .where(eq(rateCards.code, parsed.data.code))
+      .returning({ code: rateCards.code });
+    if (result.length === 0) {
+      return { error: 'Rate card not found.' };
+    }
     revalidatePath('/admin');
     return {};
   } catch {
@@ -55,14 +56,21 @@ export async function updateTierThresholds(
 
   try {
     const db = getDb();
-    await Promise.all(
+    const results = await Promise.all(
       parsed.data.map((u) =>
         db
           .update(tierThresholds)
           .set({ thresholdMinVnd: String(u.thresholdMinVnd) })
-          .where(eq(tierThresholds.tierKey, u.tierKey)),
+          .where(eq(tierThresholds.tierKey, u.tierKey))
+          .returning({ tierKey: tierThresholds.tierKey }),
       ),
     );
+    const notFound = parsed.data
+      .filter((_, i) => results[i].length === 0)
+      .map((u) => u.tierKey);
+    if (notFound.length > 0) {
+      return { error: `Tier key(s) not found: ${notFound.join(', ')}` };
+    }
     revalidatePath('/admin');
     return {};
   } catch {
