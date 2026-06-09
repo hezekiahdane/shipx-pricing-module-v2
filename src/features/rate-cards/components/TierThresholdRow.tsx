@@ -56,7 +56,9 @@ export default function TierThresholdRow({
     const nonPublicTiers = tiers.filter((t) => t.thresholdMinVnd !== null);
     const updates = nonPublicTiers.map((t) => ({
       tierKey: t.tierKey,
-      thresholdMinVnd: parseFloat(draft[t.tierKey] ?? '') * 1_000_000,
+      thresholdMinVnd: Math.round(
+        parseFloat(draft[t.tierKey] ?? '') * 1_000_000,
+      ),
     }));
 
     if (
@@ -162,7 +164,10 @@ export default function TierThresholdRow({
       </tr>
       {error !== null && (
         <tr>
-          <td colSpan={colSpanPrefix + tiers.length} className="px-3 pb-1.5">
+          <td
+            colSpan={colSpanPrefix + tiers.length + 1}
+            className="px-3 pb-1.5"
+          >
             <p className="text-xs text-red-500">{error}</p>
           </td>
         </tr>

@@ -56,24 +56,30 @@ export async function updateTierThresholds(
 
   try {
     const db = getDb();
-    const results = await Promise.all(
-      parsed.data.map((u) =>
-        db
-          .update(tierThresholds)
-          .set({ thresholdMinVnd: String(u.thresholdMinVnd) })
-          .where(eq(tierThresholds.tierKey, u.tierKey))
-          .returning({ tierKey: tierThresholds.tierKey }),
-      ),
-    );
-    const notFound = parsed.data
-      .filter((_, i) => results[i].length === 0)
-      .map((u) => u.tierKey);
-    if (notFound.length > 0) {
-      return { error: `Tier key(s) not found: ${notFound.join(', ')}` };
-    }
+    await db.transaction(async (tx) => {
+      const results = await Promise.all(
+        parsed.data.map((u) =>
+          tx
+            .update(tierThresholds)
+            .set({ thresholdMinVnd: String(u.thresholdMinVnd) })
+            .where(eq(tierThresholds.tierKey, u.tierKey))
+            .returning({ tierKey: tierThresholds.tierKey }),
+        ),
+      );
+      const notFound = parsed.data
+        .filter((_, i) => results[i].length === 0)
+        .map((u) => u.tierKey);
+      if (notFound.length > 0) {
+        throw new Error(`Tier key(s) not found: ${notFound.join(', ')}`);
+      }
+    });
     revalidatePath('/admin');
     return {};
-  } catch {
-    return { error: 'Failed to save thresholds. Please try again.' };
+  } catch (err) {
+    const message =
+      err instanceof Error
+        ? err.message
+        : 'Failed to save thresholds. Please try again.';
+    return { error: message };
   }
 }

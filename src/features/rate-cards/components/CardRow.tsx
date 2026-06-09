@@ -101,6 +101,7 @@ export default function CardRow({
       if (col) initialDraft[col] = String(card[col] ?? '');
     }
     setDraft(initialDraft);
+    setError(null);
     setEditing(true);
   }
 
