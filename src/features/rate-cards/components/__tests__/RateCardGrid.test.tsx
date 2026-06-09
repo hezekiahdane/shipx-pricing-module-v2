@@ -6,6 +6,12 @@ import type { RateCard, TierThreshold } from '@/lib/database/schema';
 const { pushMock } = vi.hoisted(() => ({ pushMock: vi.fn() }));
 vi.mock('next/navigation', () => ({ useRouter: () => ({ push: pushMock }) }));
 
+// Mock server actions pulled in transitively by TierThresholdRow and CardRow
+vi.mock('@/lib/database/actions/rate-cards', () => ({
+  updateTierThresholds: vi.fn(),
+  updateRateCardDiscounts: vi.fn(),
+}));
+
 import RateCardGrid from '../RateCardGrid';
 
 type CardSummary = Pick<

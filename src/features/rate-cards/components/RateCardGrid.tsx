@@ -2,6 +2,8 @@
 import { useRouter } from 'next/navigation';
 import { Fragment } from 'react';
 import type { RateCard, TierThreshold } from '@/lib/database/schema';
+import CardRow from './CardRow';
+import TierThresholdRow from './TierThresholdRow';
 
 type CardSummary = Pick<
   RateCard,
@@ -18,28 +20,6 @@ type CardSummary = Pick<
   | 'discountTier5'
   | 'discountPt'
 >;
-
-// Maps a tier_key from the DB to the corresponding discount column on CardSummary.
-// 'pt' has no discount column — it renders as a plain "PT" label.
-const TIER_KEY_TO_COLUMN: Record<
-  string,
-  keyof Pick<
-    CardSummary,
-    | 'discountPublic'
-    | 'discountTier1'
-    | 'discountTier2'
-    | 'discountTier3'
-    | 'discountTier4'
-    | 'discountTier5'
-  >
-> = {
-  public: 'discountPublic',
-  tier1: 'discountTier1',
-  tier2: 'discountTier2',
-  tier3: 'discountTier3',
-  tier4: 'discountTier4',
-  tier5: 'discountTier5',
-};
 
 interface RateCardGridProps {
   cards: CardSummary[];
@@ -91,49 +71,6 @@ function groupCards(cards: CardSummary[]) {
   return sections.filter((s) => s.cards.length > 0);
 }
 
-// ─── Formatting helpers ────────────────────────────────────────────────────
-
-/**
- * Format a VND threshold value for display in a column header.
- * Finds the next tier to derive the "< X" label for the public tier.
- */
-function fmtThreshold(tier: TierThreshold, allTiers: TierThreshold[]): string {
-  if (!tier.thresholdMinVnd) {
-    // Public tier: show "< [next tier]"
-    const next = allTiers.find((t) => t.sortOrder === tier.sortOrder + 1);
-    if (!next?.thresholdMinVnd) return '—';
-    const m = Number(next.thresholdMinVnd) / 1_000_000;
-    return `< ${m}M`;
-  }
-  const m = Number(tier.thresholdMinVnd) / 1_000_000;
-  return `≥ ${m}M`;
-}
-
-function fmtDiscount(val: string | null | undefined): string {
-  if (!val) return '—';
-  const n = parseFloat(val);
-  return Number.isNaN(n) ? '—' : `${n}%`;
-}
-
-function fmtName(name: string): string {
-  return name.replace(/\s*·\s*/g, ' — ');
-}
-
-// ─── Status styles ─────────────────────────────────────────────────────────
-
-const STATUS_TEXT: Record<string, string> = {
-  Active: 'text-green-700 font-semibold',
-  Experiment: 'text-amber-600 font-semibold',
-  'Pre-launch': 'text-blue-600 font-semibold',
-  'Not Live': 'text-gray-400',
-  'Under Review': 'text-red-600 font-semibold',
-};
-
-const ROW_BG: Record<string, string> = {
-  'Under Review': 'bg-red-50',
-  Experiment: 'bg-amber-50/30',
-};
-
 // ─── Component ─────────────────────────────────────────────────────────────
 
 export default function RateCardGrid({
@@ -148,8 +85,8 @@ export default function RateCardGrid({
   }
 
   const sections = groupCards(cards);
-  // code + name + category + status + source + tiers
-  const colCount = 5 + tiers.length;
+  // code + name + category + status + source + tiers + action column
+  const colCount = 5 + tiers.length + 1;
 
   return (
     <div className="overflow-x-auto rounded-lg border border-gray-200">
@@ -180,28 +117,14 @@ export default function RateCardGrid({
                 {t.label}
               </th>
             ))}
+            <th className="px-2 py-3" /> {/* action column */}
           </tr>
         </thead>
 
         {/* ── Sections ── */}
         <tbody className="divide-y divide-gray-100 bg-white">
           {/* Revenue threshold row — sits above the first section */}
-          <tr className="border-b bg-gray-50">
-            <td
-              colSpan={5}
-              className="px-3 py-1.5 text-xs font-bold text-gray-700"
-            >
-              Tier Revenue Threshold
-            </td>
-            {tiers.map((t) => (
-              <td
-                key={t.tierKey}
-                className="px-3 py-1.5 text-center text-sm font-bold text-gray-700"
-              >
-                {fmtThreshold(t, tiers)}
-              </td>
-            ))}
-          </tr>
+          <TierThresholdRow tiers={tiers} colSpanPrefix={5} />
 
           {sections.map((section) => (
             <Fragment key={section.label}>
@@ -214,52 +137,15 @@ export default function RateCardGrid({
                 </td>
               </tr>
 
-              {section.cards.map((c) => {
-                const rowBg = ROW_BG[c.status ?? ''] ?? '';
-                const txtStyle = STATUS_TEXT[c.status ?? ''] ?? 'text-gray-500';
-
-                return (
-                  <tr
-                    key={c.code}
-                    onClick={() => router.push(`/admin/cards/${c.code}`)}
-                    className={`cursor-pointer transition-colors hover:bg-gray-50 ${rowBg}`}
-                  >
-                    <td className="px-3 py-2.5 font-mono text-xs font-medium text-gray-500">
-                      <div className="flex flex-col gap-0.5">
-                        {c.code}
-                        {!codesWithRates.has(c.code) && (
-                          <span className="inline-block w-fit rounded bg-gray-100 px-1 py-0.5 text-[10px] font-normal text-gray-400">
-                            no rates
-                          </span>
-                        )}
-                      </div>
-                    </td>
-                    <td className="px-3 py-2.5 font-medium text-gray-900">
-                      {fmtName(c.productName)}
-                    </td>
-                    <td className="px-3 py-2.5 text-xs text-gray-400">
-                      {c.category}
-                    </td>
-                    <td className={`px-3 py-2.5 ${txtStyle}`}>{c.status}</td>
-                    <td className="px-3 py-2.5 text-center">
-                      <span className="inline-flex items-center rounded border border-gray-200 bg-gray-50 px-1.5 py-0.5 font-mono text-xs text-gray-600">
-                        {c.source}
-                      </span>
-                    </td>
-                    {tiers.map((t) => {
-                      const col = TIER_KEY_TO_COLUMN[t.tierKey];
-                      return (
-                        <td
-                          key={t.tierKey}
-                          className="px-3 py-2.5 text-center tabular-nums text-gray-700"
-                        >
-                          {col ? fmtDiscount(c[col]) : 'PT'}
-                        </td>
-                      );
-                    })}
-                  </tr>
-                );
-              })}
+              {section.cards.map((c) => (
+                <CardRow
+                  key={c.code}
+                  card={c}
+                  tiers={tiers}
+                  hasRates={codesWithRates.has(c.code)}
+                  onNavigate={(code) => router.push(`/admin/cards/${code}`)}
+                />
+              ))}
             </Fragment>
           ))}
         </tbody>
