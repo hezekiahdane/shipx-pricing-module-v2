@@ -8,7 +8,12 @@ export default defineConfig({
     environment: 'jsdom',
     setupFiles: ['./src/test/setup.ts'],
     globals: true,
-    exclude: ['node_modules/**', 'src/test/e2e/**', '.next/**'],
+    exclude: [
+      'node_modules/**',
+      'src/test/e2e/**',
+      '.next/**',
+      '.worktrees/**',
+    ],
     server: {
       deps: {
         inline: ['next-auth'],
