@@ -117,7 +117,7 @@ export default function RateCardGrid({
                 {t.label}
               </th>
             ))}
-            <th className="px-2 py-3" /> {/* action column */}
+            <th className="px-2 py-3" />
           </tr>
         </thead>
 
